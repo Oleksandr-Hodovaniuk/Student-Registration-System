@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Add The Infrastructure layer.
+//Add custom services and connect to a database.
 builder.Services.AddInfractructure(builder.Configuration);
 
 var app = builder.Build();
