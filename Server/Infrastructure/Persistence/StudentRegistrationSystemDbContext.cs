@@ -3,17 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
-    internal class AppDbContext : DbContext
+    internal class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) : DbContext(options)
     {
         internal DbSet<Course> Courses { get; set; }
         internal DbSet<Topic> Topics { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseSqlServer("Data Source=XEONSILA;Database=StudentRegistrationSystemDb;Integrated Security=True;Trust Server Certificate=True;");
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
