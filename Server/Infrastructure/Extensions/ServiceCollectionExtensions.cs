@@ -7,11 +7,11 @@ namespace Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        //The extension method to add custom services to IServiceCollection and connect to a database.
+        //Adds services to IServiceCollection and connects to a database.
         public static void AddInfractructure(this IServiceCollection services, IConfiguration configuration)
         {
 
-            var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb"); //Get connection string from a JSON file.
+            var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb"); //Gets connection string from a JSON file.
 
             services.AddDbContext<StudentRegistrationSystemDbContext>(options => 
                 options.UseSqlServer(connectionString));
