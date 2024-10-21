@@ -10,7 +10,6 @@ namespace Infrastructure.Extensions
         //Adds services to IServiceCollection and connects to a database.
         public static void AddInfractructure(this IServiceCollection services, IConfiguration configuration)
         {
-
             var connectionString = configuration.GetConnectionString("StudentRegistrationSystem"); //Gets a connection string from a JSON file.
 
             services.AddDbContext<StudentRegistrationSystemDbContext>(options => 
