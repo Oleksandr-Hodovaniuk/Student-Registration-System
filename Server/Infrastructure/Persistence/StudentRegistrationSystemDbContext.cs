@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -12,5 +13,9 @@ internal class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegist
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        //Configuring entities.
+        modelBuilder.ApplyConfiguration(new TopicConfiguration());
+        modelBuilder.ApplyConfiguration(new CourseConfiguration());
     }
 }
