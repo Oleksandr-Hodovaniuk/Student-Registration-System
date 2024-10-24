@@ -39,4 +39,17 @@ public class TopicsController : ControllerBase
 
         return Created();
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] TopicDTO topic)
+    {
+        if (id != topic.Id)
+        {
+            return BadRequest("ID in URL and body mismatch. Please provide the correct ID.");
+        }
+
+        await _service.UpdateAsync(topic);
+
+        return NoContent();
+    }
 }
