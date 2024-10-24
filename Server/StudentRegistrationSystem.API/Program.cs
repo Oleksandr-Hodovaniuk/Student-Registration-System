@@ -1,4 +1,5 @@
 using Infrastructure.Extensions;
+using Infrastructure.Persistence.Seeders.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+//Data seeding.
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
+await seeder.SeedAsync();
 
 // Configures the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

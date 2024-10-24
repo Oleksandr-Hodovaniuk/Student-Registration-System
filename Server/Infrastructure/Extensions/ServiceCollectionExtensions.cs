@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Application.Services;
 using Application.Repositories;
 using Infrastructure.Repositories;
+using Infrastructure.Persistence.Seeders.Interfaces;
+using Infrastructure.Persistence.Seeders;
 
 namespace Infrastructure.Extensions;
 
@@ -17,6 +19,8 @@ public static class ServiceCollectionExtensions
         //Connecting to a database.
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
+
+        services.AddScoped<ISeeder, TopicSeeder>();
 
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
