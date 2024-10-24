@@ -22,29 +22,11 @@ internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : ISeed
     private IEnumerable<Topic> GetTopics()
     {
         List<Topic> topics = [
-            new()
-            {
-                Name = "C#"
-            },
-
-            new()
-            {
-                Name = "PHP"
-            },
-
-            new()
-            {
-                Name = "Java"
-            }, 
-            
-            new()
-            {
-                Name = "C++"
-            },
-            new()
-            {
-                Name = "Python"
-            }
+            new() { Name = "C#"},
+            new() { Name = "PHP"},
+            new() { Name = "Java"}, 
+            new() { Name = "C++"},
+            new() { Name = "Python"}
         ];
 
         return topics;
