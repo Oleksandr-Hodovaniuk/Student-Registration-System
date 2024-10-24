@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace Infrastructure.Interfaces;
+namespace Application.Repositories;
 
 public interface ITopicRepository
 {
