@@ -1,10 +1,10 @@
 ﻿using Core.Entities;
-using Infrastructure.Persistence.Configurations;
+using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-internal class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) 
+public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) 
     :DbContext(options)
 {
     internal DbSet<Course> Courses { get; set; }
