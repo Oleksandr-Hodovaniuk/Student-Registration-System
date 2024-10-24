@@ -2,20 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations;
+namespace Infrastructure.Configurations;
 
-internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
+internal class CourseConfiguration : IEntityTypeConfiguration<Course>
 {
-    public void Configure(EntityTypeBuilder<Topic> builder)
+    public void Configure(EntityTypeBuilder<Course> builder)
     {
-        builder.HasKey(t => t.Id);
+        builder.HasKey(c => c.Id);
 
-        builder.HasMany(t => t.Courses)
-            .WithMany(c => c.Topics)
+        builder.HasMany(c => c.Topics)
+            .WithMany(t => t.Courses)
             .UsingEntity<Dictionary<string, object>>(   //Configuring a junction table.
                 "CourseTopic",
-                j => j.HasOne<Course>().WithMany().HasForeignKey("CourseId"),
                 j => j.HasOne<Topic>().WithMany().HasForeignKey("TopicId"),
+                j => j.HasOne<Course>().WithMany().HasForeignKey("CourseId"),
                 j => j.HasKey("CourseId", "TopicId")
             );
     }
