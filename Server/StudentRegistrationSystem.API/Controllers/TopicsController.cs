@@ -52,4 +52,12 @@ public class TopicsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        await _service.DeleteAsync(id);
+
+        return NoContent();
+    }
 }
