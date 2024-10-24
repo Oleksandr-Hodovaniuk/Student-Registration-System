@@ -2,6 +2,7 @@
 using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
+using Core.Entities;
 
 namespace Application.Services;
 
@@ -16,18 +17,21 @@ public class TopicService : ITopicService
     }
     public async Task<IEnumerable<TopicDTO>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var topics = await _repository.GetAllAsync();
+        return _mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
     public async Task CreateAsync(TopicDTO topic)
     {
-        throw new NotImplementedException();
+        var entity = _mapper.Map<Topic>(topic);
+        await _repository.CreateAsync(entity);
     }
     public async Task UpdateAsync(TopicDTO topic)
     {
-        throw new NotImplementedException();
+        var entity = _mapper.Map<Topic>(topic);
+        await _repository.UpdateAsync(entity);
     }
     public async Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        await _repository.DeleteAsync(id);
     }
 }
