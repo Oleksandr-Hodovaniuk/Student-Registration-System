@@ -1,4 +1,5 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.DTOs;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
@@ -24,5 +25,18 @@ public class TopicsController : ControllerBase
         }
 
         return Ok(topics);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromBody] TopicDTO topic)
+    {
+        if (!ModelState.IsValid || topic == null || topic.Id != 0)
+        {
+            return BadRequest(ModelState);
+        }
+
+        await _service.CreateAsync(topic);
+
+        return Created();
     }
 }
