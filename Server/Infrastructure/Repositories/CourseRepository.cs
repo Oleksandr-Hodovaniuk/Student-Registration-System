@@ -22,6 +22,7 @@ public class CourseRepository : ICourseRepository
     {
         return await _context.Courses
             .Where(c => c.Topics.Any(t => t.Id == topicId))
+            .Include(c => c.Topics)
             .ToListAsync();
     }
 
