@@ -10,4 +10,5 @@ public class CourseDTO
     public bool IsAvailable { get; set; }
     public DateTime Beginning { get; set; }
     public short Duration { get; set; }
+    public IEnumerable<TopicDTO> Topics { get; set; } = default!;
 }
