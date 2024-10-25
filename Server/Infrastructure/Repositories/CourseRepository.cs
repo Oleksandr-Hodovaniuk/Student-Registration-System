@@ -15,7 +15,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task<IEnumerable<Course>> GetAllAsync()
     {
-        return await _context.Courses.OrderBy(c => c.Name).ToListAsync();
+        return await _context.Courses.OrderBy(c => c.Name).Include(c => c.Topics).ToListAsync();
     }
 
     public async Task<IEnumerable<Course>> GetAllAsync(int topicId)
