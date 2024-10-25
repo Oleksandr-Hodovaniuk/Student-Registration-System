@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
 
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
+        services.AddScoped<ICourseRepository, CourseRepository>();
+
         services.AddScoped<ITopicRepository, TopicRepository>();
 
         services.AddScoped<ITopicService, TopicService>();
