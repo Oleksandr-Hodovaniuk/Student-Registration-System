@@ -22,6 +22,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ISeeder, TopicSeeder>();
 
+        services.AddAutoMapper(typeof(CourseProfile).Assembly);
+
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
         services.AddScoped<ITopicRepository, TopicRepository>();
