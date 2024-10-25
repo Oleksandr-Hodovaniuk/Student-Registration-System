@@ -1,6 +1,4 @@
-﻿using Core.Entities;
-
-namespace Application.DTOs;
+﻿namespace Application.DTOs;
 
 public class CourseDTO
 {
