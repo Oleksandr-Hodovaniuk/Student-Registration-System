@@ -30,6 +30,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ITopicRepository, TopicRepository>();
 
+        services.AddScoped<ICourseService, CourseService>();
+
         services.AddScoped<ITopicService, TopicService>();
     }
 }
