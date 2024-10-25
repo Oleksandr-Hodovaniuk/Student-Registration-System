@@ -22,9 +22,15 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ISeeder, TopicSeeder>();
 
+        services.AddAutoMapper(typeof(CourseProfile).Assembly);
+
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
+        services.AddScoped<ICourseRepository, CourseRepository>();
+
         services.AddScoped<ITopicRepository, TopicRepository>();
+
+        services.AddScoped<ICourseService, CourseService>();
 
         services.AddScoped<ITopicService, TopicService>();
     }
