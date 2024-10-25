@@ -23,15 +23,15 @@ public class CourseService : ICourseService
         return _mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
 
-    public async Task<IEnumerable<CourseDTO>> GetAllAsync(int topicId)
+    public async Task<IEnumerable<CourseDTO>> GetAllByIdAsync(int topicId)
     {
-        var courses = await _repository.GetAllAsync(topicId);
+        var courses = await _repository.GetAllByIdAsync(topicId);
         return _mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
 
-    public async Task<CourseDTO> GetAsync(int id)
+    public async Task<CourseDTO> GetByIdAsync(int id)
     {
-        var course = await _repository.GetAsync(id);
+        var course = await _repository.GetByIdAsync(id);
         return _mapper.Map<CourseDTO>(course);
     }
 
