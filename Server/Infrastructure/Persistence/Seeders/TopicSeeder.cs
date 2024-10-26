@@ -36,7 +36,19 @@ internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : ISeed
             new() { Name = "WPF"},
             new() { Name = "OOP"},
             new() { Name = "Angular"},
-            new() { Name = "React"}
+            new() { Name = "React"},
+            new() { Name = "R"},
+            new() { Name = "Data Science"},
+            new() { Name = "Machine Learning"},
+            new() { Name = "Algorithms"},
+            new() { Name = "Cybersecurity"},
+            new() { Name = "Android"},
+            new() { Name = "iOS"},
+            new() { Name = "SQLite"},
+            new() { Name = "Firebase"},
+            new() { Name = "GitHub"},
+            new() { Name = "Node.js"},
+            new() { Name = "RESTful APIs"}
         ];
 
         return topics;
