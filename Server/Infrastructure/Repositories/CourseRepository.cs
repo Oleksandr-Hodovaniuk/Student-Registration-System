@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class CourseRepository : ICourseRepository
+internal class CourseRepository : ICourseRepository
 {
     private readonly StudentRegistrationSystemDbContext _context;
     public CourseRepository(StudentRegistrationSystemDbContext context)
@@ -15,10 +15,13 @@ public class CourseRepository : ICourseRepository
 
     public async Task<IEnumerable<Course>> GetAllAsync()
     {
-        return await _context.Courses.OrderBy(c => c.Name).ToListAsync();
+        return await _context.Courses
+            .OrderBy(c => c.Name)
+            .Include(c => c.Topics)
+            .ToListAsync();
     }
 
-    public async Task<IEnumerable<Course>> GetAllAsync(int topicId)
+    public async Task<IEnumerable<Course>> GetAllByIdAsync(int topicId)
     {
         return await _context.Courses
             .Where(c => c.Topics.Any(t => t.Id == topicId))
@@ -26,7 +29,7 @@ public class CourseRepository : ICourseRepository
             .ToListAsync();
     }
 
-    public async Task<Course?> GetAsync(int id)
+    public async Task<Course?> GetByIdAsync(int id)
     {
         return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id);
     }

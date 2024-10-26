@@ -28,9 +28,9 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet("all/{topicId}")]
-    public async Task<IActionResult> GetAllAsync(int topicId)
+    public async Task<IActionResult> GetAllByIdAsync(int topicId)
     {
-        var courses = await _service.GetAllAsync(topicId);
+        var courses = await _service.GetAllByIdAsync(topicId);
 
         if (courses == null || !courses.Any())
         {
@@ -41,9 +41,9 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var course =  await _service.GetAsync(id);
+        var course =  await _service.GetByIdAsync(id);
         return Ok(course);
     }
 
