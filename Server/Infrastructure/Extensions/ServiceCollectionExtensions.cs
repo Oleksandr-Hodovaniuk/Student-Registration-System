@@ -20,11 +20,19 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
 
+        services.AddScoped<ISeeder, CourseSeeder>();
+
         services.AddScoped<ISeeder, TopicSeeder>();
+
+        services.AddAutoMapper(typeof(CourseProfile).Assembly);
 
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
+        services.AddScoped<ICourseRepository, CourseRepository>();
+
         services.AddScoped<ITopicRepository, TopicRepository>();
+
+        services.AddScoped<ICourseService, CourseService>();
 
         services.AddScoped<ITopicService, TopicService>();
     }

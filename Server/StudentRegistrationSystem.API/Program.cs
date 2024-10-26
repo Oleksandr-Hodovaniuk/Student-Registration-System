@@ -15,8 +15,10 @@ var app = builder.Build();
 
 //Data seeding.
 var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
-await seeder.SeedAsync();
+var services = scope.ServiceProvider;
+var seeders = services.GetServices<ISeeder>();
+foreach (var seeder in seeders)
+    await seeder.SeedAsync();
 
 // Configures the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
