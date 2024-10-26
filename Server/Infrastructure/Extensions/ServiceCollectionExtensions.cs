@@ -8,7 +8,6 @@ using Application.Services;
 using Application.Repositories;
 using Infrastructure.Repositories;
 using Infrastructure.Persistence.Seeders;
-using System.Data;
 using Application.Seeders;
 
 namespace Infrastructure.Extensions;
