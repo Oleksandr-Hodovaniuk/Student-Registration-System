@@ -1,7 +1,5 @@
 using Application.Services.Interfaces;
 using Infrastructure.Extensions;
-using Microsoft.AspNetCore.Hosting.Server;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
