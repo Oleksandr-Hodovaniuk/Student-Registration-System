@@ -27,8 +27,8 @@ public class CoursesController : ControllerBase
         return Ok(courses);
     }
 
-    [HttpGet("all/{topicId}")]
-    public async Task<IActionResult> GetAllByIdAsync(int topicId)
+    [HttpGet("allById")]
+    public async Task<IActionResult> GetAllByIdAsync([FromQuery] params int[] topicId)
     {
         var courses = await _service.GetAllByIdAsync(topicId);
 
