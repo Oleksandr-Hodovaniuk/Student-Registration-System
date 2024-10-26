@@ -1,5 +1,7 @@
+using Application.Services.Interfaces;
 using Infrastructure.Extensions;
-using Infrastructure.Persistence.Seeders.Interfaces;
+using Microsoft.AspNetCore.Hosting.Server;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +17,8 @@ var app = builder.Build();
 
 //Data seeding.
 var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-var seeders = services.GetServices<ISeeder>();
-foreach (var seeder in seeders)
-    await seeder.SeedAsync();
+var seeder = scope.ServiceProvider.GetRequiredService<IDataSeederService>();
+await seeder.SeedAsync();
 
 // Configures the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

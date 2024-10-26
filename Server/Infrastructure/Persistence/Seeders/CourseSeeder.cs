@@ -1,10 +1,10 @@
-﻿using Core.Entities;
-using Infrastructure.Persistence.Seeders.Interfaces;
+﻿using Application.Seeders;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Seeders;
 
-internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : ISeeder
+internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDataSeeder
 {
     public async Task SeedAsync()
     {

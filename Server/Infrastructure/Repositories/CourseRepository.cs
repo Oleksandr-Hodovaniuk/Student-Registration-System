@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class CourseRepository : ICourseRepository
+internal class CourseRepository : ICourseRepository
 {
     private readonly StudentRegistrationSystemDbContext _context;
     public CourseRepository(StudentRegistrationSystemDbContext context)
