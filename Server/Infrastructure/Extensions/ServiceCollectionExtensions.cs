@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
 
-        // Registration of repositories.
+        //Registration of repositories.
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<ITopicRepository, TopicRepository>();
 
