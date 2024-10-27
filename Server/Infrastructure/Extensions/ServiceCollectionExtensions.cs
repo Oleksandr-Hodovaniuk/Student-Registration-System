@@ -7,6 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Application.Services;
 using Application.Repositories;
 using Infrastructure.Repositories;
+using Infrastructure.Persistence.Seeders;
+using Application.Seeders;
+using FluentValidation;
+using Application.DTOs;
+using Application.Validators;
 
 namespace Infrastructure.Extensions;
 
@@ -18,10 +23,24 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
 
-        services.AddAutoMapper(typeof(TopicProfile).Assembly);
-
+        //Registration of repositories.
+        services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<ITopicRepository, TopicRepository>();
 
+        //Registration of mappers.
+        services.AddAutoMapper(typeof(CourseProfile).Assembly);
+        services.AddAutoMapper(typeof(TopicProfile).Assembly);
+
+        //Registration of seeders.
+        services.AddScoped<IDataSeeder, CourseSeeder>();
+        services.AddScoped<IDataSeeder, TopicSeeder>();
+
+        //Registration of validators.
+        services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+
+        //Registration of services.
+        services.AddScoped<IDataSeederService, DataSeederService>();
+        services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ITopicService, TopicService>();
     }
 }

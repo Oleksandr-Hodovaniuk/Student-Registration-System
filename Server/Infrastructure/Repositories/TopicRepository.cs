@@ -5,7 +5,7 @@ using Application.Repositories;
 
 namespace Infrastructure.Repositories;
 
-public class TopicRepository : ITopicRepository
+internal class TopicRepository : ITopicRepository
 {
     private readonly StudentRegistrationSystemDbContext _context;
 
@@ -13,25 +13,34 @@ public class TopicRepository : ITopicRepository
     {
         _context = context;
     }
+
     public async Task<IEnumerable<Topic>> GetAllAsync()
     {
         return await _context.Topics.OrderBy(t => t.Name).ToListAsync();
     }
+
     public async Task CreateAsync(Topic topic)
     {
         await _context.Topics.AddAsync(topic);
         await _context.SaveChangesAsync();
     }
+
     public async Task UpdateAsync(Topic topic)
     {
         _context.Topics.Update(topic);
         await _context.SaveChangesAsync();
     }
+
     public async Task DeleteAsync(int id)
     {
         var topic = await _context.Topics.FindAsync(id);
 
         _context.Topics.Remove(topic!);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExistsByNameAsync(string name)
+    {
+        return await _context.Topics.AnyAsync(t => t.Name == name);
     }
 }

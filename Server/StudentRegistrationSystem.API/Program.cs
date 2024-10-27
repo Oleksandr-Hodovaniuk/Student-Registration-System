@@ -1,8 +1,9 @@
+using Application.Services.Interfaces;
 using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adds base services to the container.
+//Adds base services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -12,7 +13,12 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Configures the HTTP request pipeline.
+//Data seeding.
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<IDataSeederService>();
+await seeder.SeedAsync();
+
+//Configures the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

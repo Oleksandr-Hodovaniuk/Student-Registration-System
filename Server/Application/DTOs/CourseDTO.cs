@@ -1,6 +1,6 @@
-﻿namespace Core.Entities;
+﻿namespace Application.DTOs;
 
-public class Course
+public class CourseDTO
 {
     public int Id { get; set; }
     public string Name { get; set; } = default!;
@@ -9,5 +9,5 @@ public class Course
     public bool IsAvailable { get; set; }
     public DateTime Beginning { get; set; }
     public short Duration { get; set; }
-    public IEnumerable<Topic> Topics { get; set; } = default!;
+    public IEnumerable<TopicDTO> Topics { get; set; } = default!;
 }
