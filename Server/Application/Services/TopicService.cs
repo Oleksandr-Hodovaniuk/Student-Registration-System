@@ -28,7 +28,7 @@ public class TopicService : ITopicService
     {
         if (await _repository.ExistsByNameAsync(topic.Name))
         {
-            throw new BusinessException("Topic with this name already exists.");
+            throw new BusinessException($"Topic with name {topic.Name} already exists.");
         }
 
         var entity = _mapper.Map<Topic>(topic);
@@ -43,6 +43,11 @@ public class TopicService : ITopicService
 
     public async Task DeleteAsync(int id)
     {
+        if (!await _repository.ExistsByIdAsync(id))
+        {
+            throw new NotFoundException($"Topic with Id {id} doesn't exist.");
+        }
+        
         await _repository.DeleteAsync(id);
     }
 }

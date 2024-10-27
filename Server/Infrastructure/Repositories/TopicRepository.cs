@@ -43,4 +43,9 @@ internal class TopicRepository : ITopicRepository
     {
         return await _context.Topics.AnyAsync(t => t.Name == name);
     }
+
+    public async Task<bool> ExistsByIdAsync(int id)
+    {
+        return await _context.Topics.AnyAsync(t => t.Id == id);
+    }
 }
