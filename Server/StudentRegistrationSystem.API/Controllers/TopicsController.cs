@@ -55,6 +55,12 @@ public class TopicsController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] TopicDTO topic)
     {
+        var validationResult = await _validator.ValidateAsync(topic);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+        }
         try
         {
             await _service.UpdateAsync(topic);
