@@ -8,4 +8,5 @@ public interface ITopicRepository
     public Task CreateAsync(Topic topic);
     public Task UpdateAsync(Topic topic);
     public Task DeleteAsync(int id);
+    public Task<bool> ExistsByNameAsync(string name);
 }

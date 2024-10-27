@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -39,10 +40,15 @@ public class TopicsController : ControllerBase
         {
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
-
-        await _service.CreateAsync(topic);
-
-        return StatusCode(201 , new { message =  "Topic created succesfully." });
+        try
+        {
+            await _service.CreateAsync(topic);
+            return StatusCode(201, new { message = "Topic created succesfully." });
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPut("{id}")]

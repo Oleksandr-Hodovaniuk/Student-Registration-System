@@ -38,4 +38,9 @@ internal class TopicRepository : ITopicRepository
         _context.Topics.Remove(topic!);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> ExistsByNameAsync(string name)
+    {
+        return await _context.Topics.AnyAsync(t => t.Name == name);
+    }
 }

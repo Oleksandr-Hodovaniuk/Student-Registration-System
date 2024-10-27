@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -25,6 +26,11 @@ public class TopicService : ITopicService
 
     public async Task CreateAsync(TopicDTO topic)
     {
+        if (await _repository.ExistsByNameAsync(topic.Name))
+        {
+            throw new BusinessException("Topic with this name already exists.");
+        }
+
         var entity = _mapper.Map<Topic>(topic);
         await _repository.CreateAsync(entity);
     }
