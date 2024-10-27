@@ -9,6 +9,9 @@ using Application.Repositories;
 using Infrastructure.Repositories;
 using Infrastructure.Persistence.Seeders;
 using Application.Seeders;
+using FluentValidation;
+using Application.DTOs;
+using Application.Validators;
 
 namespace Infrastructure.Extensions;
 
@@ -31,6 +34,9 @@ public static class ServiceCollectionExtensions
         //Registration of seeders.
         services.AddScoped<IDataSeeder, CourseSeeder>();
         services.AddScoped<IDataSeeder, TopicSeeder>();
+
+        //Registration of validators.
+        services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 
         //Registration of services.
         services.AddScoped<IDataSeederService, DataSeederService>();
