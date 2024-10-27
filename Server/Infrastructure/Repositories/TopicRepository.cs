@@ -5,7 +5,7 @@ using Application.Repositories;
 
 namespace Infrastructure.Repositories;
 
-public class TopicRepository : ITopicRepository
+internal class TopicRepository : ITopicRepository
 {
     private readonly StudentRegistrationSystemDbContext _context;
 
