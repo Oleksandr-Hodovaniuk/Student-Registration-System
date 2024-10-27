@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
@@ -9,9 +10,11 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class TopicsController : ControllerBase
 {
     private readonly ITopicService _service;
-    public TopicsController(ITopicService service)
+    private readonly IValidator<TopicDTO> _validator;
+    public TopicsController(ITopicService service, IValidator<TopicDTO> validator)
     {
         _service = service;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -30,14 +33,16 @@ public class TopicsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] TopicDTO topic)
     {
-        if (!ModelState.IsValid || topic == null || topic.Id != 0)
+        var validationResult = await _validator.ValidateAsync(topic);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest(ModelState);
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
 
         await _service.CreateAsync(topic);
 
-        return Created();
+        return StatusCode(201 , new { message =  "Topic created succesfully." });
     }
 
     [HttpPut("{id}")]
