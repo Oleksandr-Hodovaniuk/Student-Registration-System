@@ -1,15 +1,24 @@
+using Application.Services.Interfaces;
+using Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+//Adds base services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Adds custom services to the container and connect to a database.
+builder.Services.AddInfrastructure(builder.Configuration);
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//Data seeding.
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<IDataSeederService>();
+await seeder.SeedAsync();
+
+//Configures the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
