@@ -24,7 +24,7 @@ public class TopicService : ITopicService
 
         if (topics.Count() == 0)
         {      
-            throw new NotFoundException("Topics are not exist.");
+            throw new NotFoundException("Topics don't exist.");
         }
         
         return _mapper.Map<IEnumerable<TopicDTO>>(topics);

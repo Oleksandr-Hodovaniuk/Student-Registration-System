@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -20,34 +21,43 @@ public class CoursesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var courses = await _service.GetAllAsync();
-
-        if (courses == null || !courses.Any())
+        try
         {
-            return NotFound("No courses found.");
+            var courses = await _service.GetAllAsync();
+            return Ok(courses);
         }
-
-        return Ok(courses);
+        catch (NotFoundException ex) 
+        {
+            return BadRequest(ex.Message);
+        }  
     }
 
     [HttpGet("allById")]
     public async Task<IActionResult> GetAllByIdAsync([FromQuery] params int[] topicId)
     {
-        var courses = await _service.GetAllByIdAsync(topicId);
-
-        if (courses == null || !courses.Any())
+        try
         {
-            return NotFound("No courses found.");
+            var courses = await _service.GetAllByIdAsync(topicId);
+            return Ok(courses);
         }
-
-        return Ok(courses);
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        } 
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var course =  await _service.GetByIdAsync(id);
-        return Ok(course);
+        try
+        {
+            var course = await _service.GetByIdAsync(id);
+            return Ok(course);
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }    
     }
 
     [HttpPost]
@@ -57,11 +67,17 @@ public class CoursesController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors.Select( e => e.ErrorMessage));
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
-       
-        await _service.CreateAsync(course);
-        return Created();
+        try
+        {
+            await _service.CreateAsync(course);
+            return Created();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }  
     }
 
     [HttpPut]
@@ -73,15 +89,28 @@ public class CoursesController : ControllerBase
         {
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
-
-        await _service.UpdateAsync(course);
-        return NoContent();
+        try
+        {
+            await _service.UpdateAsync(course);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }      
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        await _service.DeleteAsync(id);
-        return NoContent();
+        try
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }     
     }
 }
