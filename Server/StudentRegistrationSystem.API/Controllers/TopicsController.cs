@@ -21,14 +21,15 @@ public class TopicsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var topics = await _service.GetAllAsync();
-
-        if (topics == null || !topics.Any())
+        try
         {
-            return NotFound("No topics found.");
+            var topics = await _service.GetAllAsync();
+            return Ok(topics);
         }
-
-        return Ok(topics);
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -47,21 +48,22 @@ public class TopicsController : ControllerBase
         }
         catch (BusinessException ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return BadRequest(ex.Message);
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsync(int id, [FromBody] TopicDTO topic)
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync([FromBody] TopicDTO topic)
     {
-        if (id != topic.Id)
+        try
         {
-            return BadRequest("ID in URL and body mismatch. Please provide the correct ID.");
+            await _service.UpdateAsync(topic);
+            return NoContent();
         }
-
-        await _service.UpdateAsync(topic);
-
-        return NoContent();
+        catch(NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }   
     }
 
     [HttpDelete("{id}")]

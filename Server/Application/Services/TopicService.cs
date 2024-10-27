@@ -21,6 +21,12 @@ public class TopicService : ITopicService
     public async Task<IEnumerable<TopicDTO>> GetAllAsync()
     {
         var topics = await _repository.GetAllAsync();
+
+        if (topics.Count() == 0)
+        {      
+            throw new NotFoundException("Topics are not exist.");
+        }
+        
         return _mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
 
@@ -37,6 +43,11 @@ public class TopicService : ITopicService
 
     public async Task UpdateAsync(TopicDTO topic)
     {
+        if (!await _repository.ExistsByIdAsync(topic.Id))
+        {
+            throw new NotFoundException($"Topic with Id {topic.Id} doesn't exist.");
+        }
+
         var entity = _mapper.Map<Topic>(topic);
         await _repository.UpdateAsync(entity);
     }
