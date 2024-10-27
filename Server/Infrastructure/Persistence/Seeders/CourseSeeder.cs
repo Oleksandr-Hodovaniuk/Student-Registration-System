@@ -33,6 +33,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " create real-world projects using frameworks and libraries." +
                 " The course will help you gain practical skills and prepare" +
                 " you for a professional path in the IT industry.",
+               Author = "SkillForge Academy",
                IsAvailable = true,
                Beginning = DateTime.Parse("2024-12-1 14:30:00.1234567"),
                Duration = 56
@@ -54,6 +55,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " create your own complete web application, which can be showcased" +
                 " to potential employers, providing an excellent foundation for" +
                 " your career in the IT industry.",
+               Author = "ProCode Institute",
                IsAvailable = true,
                Beginning = DateTime.Parse("2025-1-1 14:30:00.1234567"),
                Duration = 84
@@ -77,6 +79,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " of projects that showcase your ability to turn raw data into actionable" +
                 " insights, equipping you with the skills necessary for a successful" +
                 " career in data science.",
+               Author = "InnovateTech Education",
                IsAvailable = true,
                Beginning = DateTime.Parse("2024-11-1 14:30:00.1234567"),
                Duration = 70
@@ -97,6 +100,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " the end of this course, you will be equipped with the knowledge and skills needed" +
                 " to pursue a career in cybersecurity and contribute to the protection of sensitive" +
                 " data in organizations.",
+               Author = "NextGen Learning Hub",
                IsAvailable = true,
                Beginning = DateTime.Parse("2025-1-10 14:30:00.1234567"),
                Duration = 56
@@ -117,6 +121,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                " of this course, you will have the confidence and expertise to create, publish, and" +
                " maintain your own mobile applications, setting you on a path toward a successful career" +
                " in mobile development.",
+               Author = "Mastery Labs",
                IsAvailable = true,
                Beginning = DateTime.Parse("2025-2-13 14:30:00.1234567"),
                Duration = 98
