@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
@@ -8,10 +9,12 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService _service;
+    private readonly IValidator<CourseDTO> _validator;
 
-    public CoursesController(ICourseService service)
+    public CoursesController(ICourseService service, IValidator<CourseDTO> validator)
     {
         _service = service;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -50,19 +53,27 @@ public class CoursesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CourseDTO course)
     {
-        if (!ModelState.IsValid || course == null || course.Id != 0)
+        var validationResult = await _validator.ValidateAsync(course);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest(ModelState);
+            return BadRequest(validationResult.Errors.Select( e => e.ErrorMessage));
         }
-
+       
         await _service.CreateAsync(course);
-
         return Created();
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] CourseDTO course)
     {
+        var validationResult = await _validator.ValidateAsync(course);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+        }
+
         await _service.UpdateAsync(course);
         return NoContent();
     }

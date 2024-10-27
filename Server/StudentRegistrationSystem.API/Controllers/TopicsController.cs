@@ -1,5 +1,7 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
@@ -9,55 +11,72 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class TopicsController : ControllerBase
 {
     private readonly ITopicService _service;
-    public TopicsController(ITopicService service)
+    private readonly IValidator<TopicDTO> _validator;
+    public TopicsController(ITopicService service, IValidator<TopicDTO> validator)
     {
         _service = service;
+        _validator = validator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var topics = await _service.GetAllAsync();
-
-        if (topics == null || !topics.Any())
+        try
         {
-            return NotFound("No topics found.");
+            var topics = await _service.GetAllAsync();
+            return Ok(topics);
         }
-
-        return Ok(topics);
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] TopicDTO topic)
     {
-        if (!ModelState.IsValid || topic == null || topic.Id != 0)
+        var validationResult = await _validator.ValidateAsync(topic);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest(ModelState);
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
-
-        await _service.CreateAsync(topic);
-
-        return Created();
+        try
+        {
+            await _service.CreateAsync(topic);
+            return StatusCode(201, new { message = "Topic created succesfully." });
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsync(int id, [FromBody] TopicDTO topic)
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync([FromBody] TopicDTO topic)
     {
-        if (id != topic.Id)
+        try
         {
-            return BadRequest("ID in URL and body mismatch. Please provide the correct ID.");
+            await _service.UpdateAsync(topic);
+            return NoContent();
         }
-
-        await _service.UpdateAsync(topic);
-
-        return NoContent();
+        catch(NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }   
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        await _service.DeleteAsync(id);
-
-        return NoContent();
+        try
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
