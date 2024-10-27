@@ -31,7 +31,9 @@ internal class CourseRepository : ICourseRepository
 
     public async Task<Course?> GetByIdAsync(int id)
     {
-        return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Courses
+            .Include(c => c.Topics)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task CreateAsync(Course course)
