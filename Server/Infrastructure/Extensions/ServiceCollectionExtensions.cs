@@ -7,11 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Application.Services;
 using Application.Repositories;
 using Infrastructure.Repositories;
-using Infrastructure.Persistence.Seeders;
 using Application.Seeders;
 using FluentValidation;
 using Application.DTOs;
 using Application.Validators;
+using Infrastructure.Seeders;
 
 namespace Infrastructure.Extensions;
 

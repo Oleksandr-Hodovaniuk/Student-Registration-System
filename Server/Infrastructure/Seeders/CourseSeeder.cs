@@ -1,8 +1,9 @@
 ﻿using Application.Seeders;
 using Core.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Seeders;
+namespace Infrastructure.Seeders;
 
 internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDataSeeder
 {
@@ -22,7 +23,7 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
     private IEnumerable<Course> GetCourses()
     {
         List<Course> courses = [
-            new() 
+            new()
             {
                Name = "CodeQuest",
                Description = "An intensive training course that combines" +

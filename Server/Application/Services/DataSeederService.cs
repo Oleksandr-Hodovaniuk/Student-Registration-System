@@ -1,6 +1,5 @@
 ﻿using Application.Seeders;
 using Application.Services.Interfaces;
-using System.Data;
 
 namespace Application.Services;
 
