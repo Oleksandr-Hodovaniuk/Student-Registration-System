@@ -4,6 +4,7 @@ using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Core.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
@@ -11,11 +12,13 @@ public class TopicService : ITopicService
 {
     private readonly IMapper _mapper;
     private readonly ITopicRepository _repository;
+    private readonly ILogger<CourseService> _logger;
 
-    public TopicService(ITopicRepository repository, IMapper mapper)
+    public TopicService(ITopicRepository repository, IMapper mapper, ILogger<CourseService> logger)
     {
         _mapper = mapper;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<TopicDTO>> GetAllAsync()
@@ -39,6 +42,7 @@ public class TopicService : ITopicService
 
         var entity = _mapper.Map<Topic>(topic);
         await _repository.CreateAsync(entity);
+        _logger.LogInformation($"Creating a new topic: {topic.Name}");
     }
 
     public async Task UpdateAsync(TopicDTO topic)

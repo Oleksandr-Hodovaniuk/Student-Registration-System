@@ -12,16 +12,26 @@ using FluentValidation;
 using Application.DTOs;
 using Application.Validators;
 using Infrastructure.Seeders;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {   
+    {
         //Connecting to a database.
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
+
+        //Registration of logger.
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            loggingBuilder.AddNLog("nlog.config");
+        });
 
         //Registration of repositories.
         services.AddScoped<ICourseRepository, CourseRepository>();
