@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Services.Interfaces;
+using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -79,6 +80,8 @@ public class CoursesController : ControllerBase
 
         if (!validationResult.IsValid)
         {
+            _logger.LogWarning($"Course: '{course.Name}' failed validation.");
+
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
         try
@@ -92,7 +95,7 @@ public class CoursesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while updating course.");
+            _logger.LogError(ex, "An unexpected error occurred while creating course.");
 
             return StatusCode(500, "Internal server error.");
         }
@@ -122,7 +125,7 @@ public class CoursesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while upd topic.");
+            _logger.LogError(ex, "An unexpected error occurred while updating course.");
 
             return StatusCode(500, "Internal server error.");
         }
