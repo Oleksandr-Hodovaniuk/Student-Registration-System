@@ -1,7 +1,7 @@
 ﻿namespace Application.Repositories;
 
 //Base repository interface with base methods.
-public interface IRepository<T> where T : class
+public interface IGenericRepository<T> where T : class
 {
     public Task<IEnumerable<T>> GetAllAsync();
     public Task<T?> GetByIdAsync(int id) => throw new NotImplementedException();

@@ -2,7 +2,7 @@
 
 namespace Application.Repositories;
 
-public interface ITopicRepository : IRepository<Topic>
+public interface ITopicRepository : IGenericRepository<Topic>
 {
 
 }

@@ -2,7 +2,7 @@
 
 namespace Application.Services.Interfaces;
 
-public interface ITopicService : IService<TopicDTO>
+public interface ITopicService : IGenericService<TopicDTO>
 {
 
 }
