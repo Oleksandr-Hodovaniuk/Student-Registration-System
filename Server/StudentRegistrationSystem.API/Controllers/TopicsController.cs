@@ -38,7 +38,7 @@ public class TopicsController : ControllerBase
         {
             _logger.LogError(ex, "An unexpected error occurred while getting topic.");
 
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Internal server error.");
         }
     }
 
@@ -49,7 +49,7 @@ public class TopicsController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning($"Topic: {topic.Name} failed validation.");
+            _logger.LogWarning($"Topic: '{topic.Name}' failed validation.");
 
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
@@ -58,6 +58,10 @@ public class TopicsController : ControllerBase
             await _service.CreateAsync(topic);
 
             return StatusCode(201, new { message = "Topic created succesfully." });
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (BusinessException ex)
         {

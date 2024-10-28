@@ -11,11 +11,13 @@ public class CoursesController : ControllerBase
 {
     private readonly ICourseService _service;
     private readonly IValidator<CourseDTO> _validator;
+    private readonly ILogger<CoursesController> _logger;
 
-    public CoursesController(ICourseService service, IValidator<CourseDTO> validator)
+    public CoursesController(ICourseService service, IValidator<CourseDTO> validator, ILogger<CoursesController> logger)
     {
         _service = service;
         _validator = validator;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -26,9 +28,11 @@ public class CoursesController : ControllerBase
             var courses = await _service.GetAllAsync();
             return Ok(courses);
         }
-        catch (NotFoundException ex) 
+        catch (Exception ex) 
         {
-            return BadRequest(ex.Message);
+            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
+
+            return StatusCode(500, "Internal server error.");
         }  
     }
 
@@ -40,10 +44,12 @@ public class CoursesController : ControllerBase
             var courses = await _service.GetAllByIdAsync(topicId);
             return Ok(courses);
         }
-        catch (NotFoundException ex)
+        catch (Exception ex)
         {
-            return BadRequest(ex.Message);
-        } 
+            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpGet("{id}")]
@@ -57,7 +63,13 @@ public class CoursesController : ControllerBase
         catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
-        }    
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while getting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpPost]
@@ -74,10 +86,16 @@ public class CoursesController : ControllerBase
             await _service.CreateAsync(course);
             return Created();
         }
-        catch (NotFoundException ex)
+        catch (BusinessException ex)
         {
             return BadRequest(ex.Message);
-        }  
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while updating course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpPut]
@@ -97,7 +115,17 @@ public class CoursesController : ControllerBase
         catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
-        }      
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while upd topic.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpDelete("{id}")]
@@ -111,6 +139,12 @@ public class CoursesController : ControllerBase
         catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
-        }     
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 }
