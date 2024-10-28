@@ -12,9 +12,9 @@ public class TopicService : ITopicService
 {
     private readonly IMapper _mapper;
     private readonly ITopicRepository _repository;
-    private readonly ILogger<CourseService> _logger;
+    private readonly ILogger<TopicService> _logger;
 
-    public TopicService(ITopicRepository repository, IMapper mapper, ILogger<CourseService> logger)
+    public TopicService(ITopicRepository repository, IMapper mapper, ILogger<TopicService> logger)
     {
         _mapper = mapper;
         _repository = repository;
@@ -41,43 +41,49 @@ public class TopicService : ITopicService
     {
         if (await _repository.ExistsByNameAsync(dto.Name))
         {
-            _logger.LogWarning($"Topic with name '{dto.Name}' already exists.");
+            _logger.LogWarning($"Topic with name: '{dto.Name}' already exists.");
 
-            throw new BusinessException($"Topic with name {dto.Name} already exists.");
+            throw new BusinessException($"Topic with name '{dto.Name}' already exists.");
         }
 
         var topic = _mapper.Map<Topic>(dto);
         await _repository.CreateAsync(topic);
 
-        _logger.LogInformation($"Topic: {dto.Name} successfully created.");
+        _logger.LogInformation($"Topic: '{topic.Name}' successfully created.");
     }
 
     public async Task UpdateAsync(TopicDTO dto)
     {
         if (!await _repository.ExistsByIdAsync(dto.Id))
         {
-            _logger.LogError($"Topic with Id: {dto.Id} doesn't exist.");
+            _logger.LogError($"Topic with Id: '{dto.Id}' doesn't exist.");
 
-            throw new NotFoundException($"Topic with Id: {dto.Id} doesn't exist.");
+            throw new NotFoundException($"Topic with Id: '{dto.Id}' doesn't exist.");
+        }
+        if (await _repository.ExistsByNameAsync(dto.Name))
+        {
+            _logger.LogWarning($"Topic with name: '{dto.Name}' already exists.");
+
+            throw new BusinessException($"Topic with name '{dto.Name}' already exists.");
         }
 
         var topic = _mapper.Map<Topic>(dto);
         await _repository.UpdateAsync(topic);
 
-        _logger.LogInformation($"Topic with Id:{topic.Id} successfully updated.");
+        _logger.LogInformation($"Topic with Id: '{topic.Id}' successfully updated.");
     }
 
     public async Task DeleteAsync(int id)
     {
         if (!await _repository.ExistsByIdAsync(id))
         {
-            _logger.LogError($"Topic with Id: {id} doesn't exist.");
+            _logger.LogError($"Topic with Id: '{id}' doesn't exist.");
 
-            throw new NotFoundException($"Topic with Id: {id} doesn't exist.");
+            throw new NotFoundException($"Topic with Id: '{id}' doesn't exist.");
         }
         
         await _repository.DeleteAsync(id);
 
-        _logger.LogInformation($"Topic with Id: {id} successfully deleted.");
+        _logger.LogInformation($"Topic with Id: '{id}' successfully deleted.");
     }
 }

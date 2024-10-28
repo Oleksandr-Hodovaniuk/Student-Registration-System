@@ -4,6 +4,7 @@ using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Core.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
@@ -11,33 +12,43 @@ public class CourseService : ICourseService
 {
     private readonly IMapper _mapper;
     private readonly ICourseRepository _repository;
+    private readonly ILogger<CourseService> _logger;
 
-    public CourseService(ICourseRepository repository, IMapper mapper)
+    public CourseService(ICourseRepository repository, IMapper mapper, ILogger<CourseService> logger)
     {
         _mapper = mapper;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<CourseDTO>> GetAllAsync()
     {
         var courses = await _repository.GetAllAsync();
 
-        if (courses.Count() == 0)
+        if (!courses.Any())
         {
-            throw new NotFoundException("Courses don't exist.");
+            _logger.LogWarning("Courses don't exist.");
+
+            return Enumerable.Empty<CourseDTO>();
         }
+
+        _logger.LogInformation("Courses successfully returned.");
 
         return _mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
 
-    public async Task<IEnumerable<CourseDTO>> GetAllByIdAsync( params int[] topicId)
+    public async Task<IEnumerable<CourseDTO>> GetAllByIdAsync( params int[] topicsId)
     {
-        var courses = await _repository.GetAllByIdAsync(topicId);
+        var courses = await _repository.GetAllByIdAsync(topicsId);
 
-        if (courses.Count() == 0)
+        if (!courses.Any())
         {
-            throw new NotFoundException("Courses with these topics don't exist.");
+            _logger.LogWarning("Courses with these topics don't exist.");
+
+            return Enumerable.Empty<CourseDTO>();
         }
+
+        _logger.LogInformation("Courses successfully returned.");
 
         return _mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
@@ -46,36 +57,65 @@ public class CourseService : ICourseService
     {
         if (!await _repository.ExistsByIdAsync(id))
         {
-            throw new NotFoundException($"Course with Id {id} doesn't exist.");
+            _logger.LogError($"Course with Id: '{id}' doesn't exist.");
+
+            throw new NotFoundException($"Course with Id '{id}' doesn't exist.");
         }
 
         var course = await _repository.GetByIdAsync(id);
+
+        _logger.LogInformation($"Course with Id: '{id}' successfully returned.");
+
         return _mapper.Map<CourseDTO>(course);
     }
 
-    public async Task CreateAsync(CourseDTO course)
+    public async Task CreateAsync(CourseDTO dto)
     {
-        var entity = _mapper.Map<Course>(course);
-        await _repository.CreateAsync(entity);
-    }
-
-    public async Task UpdateAsync(CourseDTO course)
-    {
-        if (!await _repository.ExistsByIdAsync(course.Id))
+        if (await _repository.ExistsByNameAsync(dto.Name))
         {
-            throw new NotFoundException($"Course with Id {course.Id} doesn't exist.");
+            _logger.LogWarning($"Course with name: '{dto.Name}' already exists.");
+
+            throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
-        var entity = _mapper.Map<Course>(course);
-        await _repository.UpdateAsync(entity);
+        var course = _mapper.Map<Course>(dto);
+        await _repository.CreateAsync(course);
+
+        _logger.LogInformation($"Course: '{course.Name}' successfully created.");
+    }
+
+    public async Task UpdateAsync(CourseDTO dto)
+    {
+        if (!await _repository.ExistsByIdAsync(dto.Id))
+        {
+            _logger.LogError($"Course with Id: '{dto.Id}' doesn't exist.");
+
+            throw new NotFoundException($"Course with Id '{dto.Id}' doesn't exist.");     
+        }
+        if (await _repository.ExistsByNameAsync(dto.Name))
+        {
+            _logger.LogWarning($"Course with name: '{dto.Name}' already exists.");
+
+            throw new BusinessException($"Course with name '{dto.Name}' already exists.");
+        }
+
+        var course = _mapper.Map<Course>(dto);
+        await _repository.UpdateAsync(course);
+
+        _logger.LogInformation($"Course with Id: '{course.Id}' successfully updated.");
     }
 
     public async Task DeleteAsync(int id)
     {
         if (!await _repository.ExistsByIdAsync(id))
         {
-            throw new NotFoundException($"Course with Id {id} doesn't exist.");
+            _logger.LogError($"Course with Id: '{id}' doesn't exist.");
+
+            throw new NotFoundException($"Course with Id '{id}' doesn't exist.");
         }
+
         await _repository.DeleteAsync(id);
+
+        _logger.LogInformation($"Course with Id: '{id}' successfully deleted.");
     }  
 }
