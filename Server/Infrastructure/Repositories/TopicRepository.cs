@@ -48,9 +48,4 @@ internal class TopicRepository : ITopicRepository
     {
         return await _context.Topics.AnyAsync(t => t.Id == id);
     }
-
-    public Task<Topic?> GetByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
 }
