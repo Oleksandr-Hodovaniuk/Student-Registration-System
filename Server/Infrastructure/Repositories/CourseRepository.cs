@@ -25,7 +25,7 @@ internal class CourseRepository : ICourseRepository
     public async Task<IEnumerable<Course>> GetAllByIdAsync(params int[] topicsId)
     {
         return await _context.Courses
-            .Where(c => topicsId.All(id => c.Topics.Any(t => t.Id == id)))   //Returns all courses that have all topics with topicId. 
+            .Where(c => topicsId.All(id => c.Topics.Any(t => t.Id == id)))   //Returns all courses that have all topics from topicId. 
             .Include(c => c.Topics)
             .ToListAsync();
     }
