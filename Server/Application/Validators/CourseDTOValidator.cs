@@ -29,6 +29,7 @@ public class CourseDTOValidator : AbstractValidator<CourseDTO>
 
         RuleFor(x => x.Duration)
             .GreaterThanOrEqualTo((short) 1)
-            .WithMessage("Duration must be at least 1 day");
+            .LessThanOrEqualTo((short) 1000)
+            .WithMessage("Duration must be at least 1 day and less than 1000.");
     }
 }

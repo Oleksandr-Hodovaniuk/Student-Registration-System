@@ -1,8 +1,9 @@
 ﻿using Application.Seeders;
 using Core.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Seeders;
+namespace Infrastructure.Seeders;
 
 internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : IDataSeeder
 {
@@ -24,7 +25,7 @@ internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : IData
         List<Topic> topics = [
             new() { Name = "C#"},
             new() { Name = "PHP"},
-            new() { Name = "Java"}, 
+            new() { Name = "Java"},
             new() { Name = "C++"},
             new() { Name = "Python"},
             new() { Name = "JavaScript"},

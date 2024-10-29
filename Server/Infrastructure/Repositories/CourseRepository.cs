@@ -55,6 +55,10 @@ internal class CourseRepository : ICourseRepository
         _context.Courses.Remove(course!);
         await _context.SaveChangesAsync();
     }
+    public async Task<bool> ExistsByNameAsync(string name)
+    {
+        return await _context.Courses.AnyAsync(t => t.Name == name);
+    }
 
     public async Task<bool> ExistsByIdAsync(int id)
     {

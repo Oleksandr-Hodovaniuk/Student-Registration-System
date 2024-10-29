@@ -12,10 +12,12 @@ public class TopicsController : ControllerBase
 {
     private readonly ITopicService _service;
     private readonly IValidator<TopicDTO> _validator;
-    public TopicsController(ITopicService service, IValidator<TopicDTO> validator)
+    private readonly ILogger<TopicsController> _logger;
+    public TopicsController(ITopicService service, IValidator<TopicDTO> validator, ILogger<TopicsController> logger)
     {
         _service = service;
         _validator = validator;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -24,11 +26,19 @@ public class TopicsController : ControllerBase
         try
         {
             var topics = await _service.GetAllAsync();
+
+            if (!topics.Any())
+            {
+                return NoContent();
+            }
+
             return Ok(topics);
         }
-        catch (NotFoundException ex)
+        catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogError(ex, "An unexpected error occurred while getting topic.");
+
+            return StatusCode(500, "Internal server error.");
         }
     }
 
@@ -39,16 +49,29 @@ public class TopicsController : ControllerBase
 
         if (!validationResult.IsValid)
         {
+            _logger.LogWarning($"Topic: '{topic.Name}' failed validation.");
+
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
         try
         {
             await _service.CreateAsync(topic);
+
             return StatusCode(201, new { message = "Topic created succesfully." });
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (BusinessException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while creating topic.");
+
+            return StatusCode(500, "Internal server error.");
         }
     }
 
@@ -64,12 +87,19 @@ public class TopicsController : ControllerBase
         try
         {
             await _service.UpdateAsync(topic);
+
             return NoContent();
         }
         catch(NotFoundException ex)
         {
             return BadRequest(ex.Message);
-        }   
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while updating topic.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpDelete("{id}")]
@@ -83,6 +113,12 @@ public class TopicsController : ControllerBase
         catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting topic.");
+
+            return StatusCode(500, "Internal server error.");
         }
     }
 }
