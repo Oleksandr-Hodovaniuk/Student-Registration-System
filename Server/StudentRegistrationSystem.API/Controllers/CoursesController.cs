@@ -93,6 +93,10 @@ public class CoursesController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred while creating course.");

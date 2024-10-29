@@ -71,6 +71,12 @@ public class CourseService : ICourseService
 
     public async Task CreateAsync(CourseDTO dto)
     {
+        if (dto.Id != 0)
+        {
+            _logger.LogError("Field: 'id' must be 0.");
+
+            throw new BusinessException("Field: 'id' must be 0.");
+        }
         if (await _repository.ExistsByNameAsync(dto.Name))
         {
             _logger.LogWarning($"Course with name: '{dto.Name}' already exists.");
@@ -78,7 +84,18 @@ public class CourseService : ICourseService
             throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
+        var topics = await _repository.TopicsExistsAsync(dto.Topics);
+
+        if (!topics.Any())
+        {
+            _logger.LogError($"These topics don't exist.");
+
+            throw new NotFoundException($"These topics don't exist.");
+        }
+        
         var course = _mapper.Map<Course>(dto);
+        course.Topics = topics;
+
         await _repository.CreateAsync(course);
 
         _logger.LogInformation($"Course: '{course.Name}' successfully created.");
