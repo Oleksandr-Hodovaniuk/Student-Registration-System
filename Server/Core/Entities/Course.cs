@@ -9,5 +9,5 @@ public class Course
     public bool IsAvailable { get; set; }
     public DateTime Beginning { get; set; }
     public short Duration { get; set; }
-    public IEnumerable<Topic> Topics { get; set; } = default!;
+    public List<Topic> Topics { get; set; } = new();
 }

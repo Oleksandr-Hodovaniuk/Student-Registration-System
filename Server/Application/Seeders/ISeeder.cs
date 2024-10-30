@@ -1,6 +1,6 @@
 ﻿namespace Application.Seeders;
 
-public interface IDataSeeder
+public interface ISeeder
 {
     public Task SeedAsync();
 }

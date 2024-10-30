@@ -1,28 +1,63 @@
 ﻿using Application.Seeders;
 using Core.Entities;
 using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Seeders;
 
-internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDataSeeder
+internal class DataSeeder(StudentRegistrationSystemDbContext dbContext) : ISeeder
 {
     public async Task SeedAsync()
     {
-        if (await dbContext.Database.CanConnectAsync())
-        {
-            if (!await dbContext.Courses.AnyAsync())
-            {
-                var topics = GetCourses();
-                dbContext.Courses.AddRange(topics);
-                await dbContext.SaveChangesAsync();
-            }
-        }
-    }
+        var topics = GetTopics();
+        await dbContext.Topics.AddRangeAsync(topics);
 
-    private IEnumerable<Course> GetCourses()
+        var courses = GetCourses();
+        await dbContext.Courses.AddRangeAsync(courses);
+
+        courses[0].Topics.AddRange(new List<Topic> { topics[0], topics[4], topics[5] });
+        courses[1].Topics.AddRange(new List<Topic> { topics[5], topics[6], topics[7], topics[14], topics[25] });
+        courses[2].Topics.AddRange(new List<Topic> { topics[16], topics[17], topics[18] });
+        courses[3].Topics.AddRange(new List<Topic> { topics[18], topics[19] });
+        courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
+
+        await dbContext.Courses.AddRangeAsync(courses);
+        await dbContext.SaveChangesAsync();
+    }
+    private List<Topic> GetTopics()
     {
-        List<Course> courses = [
+        return new List<Topic> {
+            new() { Name = "C#"},
+            new() { Name = "PHP"},
+            new() { Name = "Java"},
+            new() { Name = "C++"},
+            new() { Name = "Python"},
+            new() { Name = "JavaScript"},
+            new() { Name = "HTML"},
+            new() { Name = "CSS"},
+            new() { Name = "SQL"},
+            new() { Name = "Entity Framework"},
+            new() { Name = "ADO.NET"},
+            new() { Name = "WPF"},
+            new() { Name = "OOP"},
+            new() { Name = "Angular"},
+            new() { Name = "React"},
+            new() { Name = "R"},
+            new() { Name = "Data Science"},
+            new() { Name = "Machine Learning"},
+            new() { Name = "Algorithms"},
+            new() { Name = "Cybersecurity"},
+            new() { Name = "Android"},
+            new() { Name = "iOS"},
+            new() { Name = "SQLite"},
+            new() { Name = "Firebase"},
+            new() { Name = "GitHub"},
+            new() { Name = "Node.js"},
+            new() { Name = "RESTful APIs"}
+        };
+    }
+    private List<Course> GetCourses()
+    {
+       return new List<Course> {
             new()
             {
                Name = "CodeQuest",
@@ -128,8 +163,8 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                Duration = 98
             }
 
-        ];
-
-        return courses;
+        };
     }
+
+
 }
