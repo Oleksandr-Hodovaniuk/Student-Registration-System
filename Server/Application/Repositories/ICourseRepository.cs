@@ -7,5 +7,5 @@ public interface ICourseRepository : IGenericRepository<Course>
 {
     public Task<IEnumerable<Course>> GetAllByIdAsync(params int[] topicsId);
 
-    public Task<IEnumerable<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics);
+    public Task<List<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics);
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Seeders;
 using Core.Entities;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Seeders;
 
@@ -8,20 +9,25 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
 {
     public async Task SeedAsync()
     {
-        var topics = GetTopics();
-        await context.Topics.AddRangeAsync(topics);
+        if (await context.Database.CanConnectAsync())
+        {
+            if (!await context.Topics.AnyAsync() && !await context.Courses.AnyAsync())
+            {
+                var topics = GetTopics();
+                await context.Topics.AddRangeAsync(topics);
 
-        var courses = GetCourses();
-        await context.Courses.AddRangeAsync(courses);
+                var courses = GetCourses();
 
-        courses[0].Topics.AddRange(new List<Topic> { topics[0], topics[4], topics[5] });
-        courses[1].Topics.AddRange(new List<Topic> { topics[5], topics[6], topics[7], topics[14], topics[25] });
-        courses[2].Topics.AddRange(new List<Topic> { topics[16], topics[17], topics[18] });
-        courses[3].Topics.AddRange(new List<Topic> { topics[18], topics[19] });
-        courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
+                courses[0].Topics.AddRange(new List<Topic> { topics[0], topics[4], topics[5] });
+                courses[1].Topics.AddRange(new List<Topic> { topics[5], topics[6], topics[7], topics[14], topics[25] });
+                courses[2].Topics.AddRange(new List<Topic> { topics[16], topics[17], topics[18] });
+                courses[3].Topics.AddRange(new List<Topic> { topics[18], topics[19] });
+                courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
 
-        await context.Courses.AddRangeAsync(courses);
-        await context.SaveChangesAsync();
+                await context.Courses.AddRangeAsync(courses);
+                await context.SaveChangesAsync();
+            }
+        }    
     }
     private List<Topic> GetTopics()
     {
@@ -57,7 +63,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
     }
     private List<Course> GetCourses()
     {
-       return new List<Course> {
+        return new List<Course> {
             new()
             {
                Name = "CodeQuest",
@@ -70,8 +76,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " The course will help you gain practical skills and prepare" +
                 " you for a professional path in the IT industry.",
                Author = "SkillForge Academy",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2024-12-1 14:30:00.1234567"),
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2024-12-1"),
                Duration = 56
             },
             new()
@@ -92,8 +98,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " to potential employers, providing an excellent foundation for" +
                 " your career in the IT industry.",
                Author = "ProCode Institute",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-1-1 14:30:00.1234567"),
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-1-1"),
                Duration = 84
             },
             new()
@@ -116,8 +122,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " insights, equipping you with the skills necessary for a successful" +
                 " career in data science.",
                Author = "InnovateTech Education",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2024-11-1 14:30:00.1234567"),
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2024-11-1"),
                Duration = 70
             },
             new()
@@ -137,8 +143,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " to pursue a career in cybersecurity and contribute to the protection of sensitive" +
                 " data in organizations.",
                Author = "NextGen Learning Hub",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-1-10 14:30:00.1234567"),
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-1-10"),
                Duration = 56
             },
             new()
@@ -158,11 +164,10 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                " maintain your own mobile applications, setting you on a path toward a successful career" +
                " in mobile development.",
                Author = "Mastery Labs",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-2-13 14:30:00.1234567"),
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-2-13"),
                Duration = 98
             }
-
         };
     }
 }

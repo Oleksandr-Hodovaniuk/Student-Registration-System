@@ -60,7 +60,7 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
         return await context.Courses.AnyAsync(t => t.Id == id);
     }
 
-    public async Task<IEnumerable<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics)
+    public async Task<List<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics)
     {
         var topicsIds = topics.Select(t => t.Id).ToList();  //Gets all ids from TopicDTOs.
         var existingIds = await context.Topics     //Gets ids fropm Topics table that match the topicsIds.
@@ -70,7 +70,7 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
 
         if (!topicsIds.All(id => existingIds.Contains(id))) //If some of ids don't match the existingIds - return empty collection.
         {
-            return Enumerable.Empty<Topic>();
+            return new List<Topic>();
         }
  
         return await context.Topics.Where(t => existingIds.Contains(t.Id)).ToListAsync();  

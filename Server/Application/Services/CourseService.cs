@@ -83,7 +83,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         }
         
         var course = mapper.Map<Course>(dto);
-        //course.Topics = topics;
+        course.Topics = topics;
 
         await repository.CreateAsync(course);
 
