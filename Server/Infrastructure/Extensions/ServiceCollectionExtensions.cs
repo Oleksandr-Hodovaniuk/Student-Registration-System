@@ -7,33 +7,51 @@ using Microsoft.Extensions.DependencyInjection;
 using Application.Services;
 using Application.Repositories;
 using Infrastructure.Repositories;
-using Infrastructure.Persistence.Seeders.Interfaces;
-using Infrastructure.Persistence.Seeders;
+using Application.Seeders;
+using FluentValidation;
+using Application.DTOs;
+using Application.Validators;
+using Infrastructure.Seeders;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {   
+    {
         //Connecting to a database.
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
 
-        services.AddScoped<ISeeder, CourseSeeder>();
+        //Registration of logger.
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            loggingBuilder.AddNLog("nlog.config");
+        });
 
-        services.AddScoped<ISeeder, TopicSeeder>();
-
-        services.AddAutoMapper(typeof(CourseProfile).Assembly);
-
-        services.AddAutoMapper(typeof(TopicProfile).Assembly);
-
+        //Registration of repositories.
         services.AddScoped<ICourseRepository, CourseRepository>();
-
         services.AddScoped<ITopicRepository, TopicRepository>();
 
-        services.AddScoped<ICourseService, CourseService>();
+        //Registration of mappers.
+        services.AddAutoMapper(typeof(CourseProfile).Assembly);
+        services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
+        //Registration of seeders.
+        services.AddScoped<IDataSeeder, CourseSeeder>();
+        services.AddScoped<IDataSeeder, TopicSeeder>();
+
+        //Registration of validators.
+        services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
+        services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+
+        //Registration of services.
+        services.AddScoped<IDataSeederService, DataSeederService>();
+        services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ITopicService, TopicService>();
     }
 }

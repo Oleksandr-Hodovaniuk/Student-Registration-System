@@ -1,10 +1,11 @@
-﻿using Core.Entities;
-using Infrastructure.Persistence.Seeders.Interfaces;
+﻿using Application.Seeders;
+using Core.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Seeders;
+namespace Infrastructure.Seeders;
 
-internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : ISeeder
+internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : IDataSeeder
 {
     public async Task SeedAsync()
     {
@@ -24,7 +25,7 @@ internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : ISeed
         List<Topic> topics = [
             new() { Name = "C#"},
             new() { Name = "PHP"},
-            new() { Name = "Java"}, 
+            new() { Name = "Java"},
             new() { Name = "C++"},
             new() { Name = "Python"},
             new() { Name = "JavaScript"},
@@ -36,7 +37,19 @@ internal class TopicSeeder(StudentRegistrationSystemDbContext dbcontext) : ISeed
             new() { Name = "WPF"},
             new() { Name = "OOP"},
             new() { Name = "Angular"},
-            new() { Name = "React"}
+            new() { Name = "React"},
+            new() { Name = "R"},
+            new() { Name = "Data Science"},
+            new() { Name = "Machine Learning"},
+            new() { Name = "Algorithms"},
+            new() { Name = "Cybersecurity"},
+            new() { Name = "Android"},
+            new() { Name = "iOS"},
+            new() { Name = "SQLite"},
+            new() { Name = "Firebase"},
+            new() { Name = "GitHub"},
+            new() { Name = "Node.js"},
+            new() { Name = "RESTful APIs"}
         ];
 
         return topics;

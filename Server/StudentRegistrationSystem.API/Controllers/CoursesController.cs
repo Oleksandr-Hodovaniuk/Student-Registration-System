@@ -1,5 +1,8 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Services.Interfaces;
+using Core.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
@@ -8,69 +11,147 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService _service;
+    private readonly IValidator<CourseDTO> _validator;
+    private readonly ILogger<CoursesController> _logger;
 
-    public CoursesController(ICourseService service)
+    public CoursesController(ICourseService service, IValidator<CourseDTO> validator, ILogger<CoursesController> logger)
     {
         _service = service;
+        _validator = validator;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
-        var courses = await _service.GetAllAsync();
-
-        if (courses == null || !courses.Any())
+        try
         {
-            return NotFound("No courses found.");
+            var courses = await _service.GetAllAsync();
+            return Ok(courses);
         }
+        catch (Exception ex) 
+        {
+            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
 
-        return Ok(courses);
+            return StatusCode(500, "Internal server error.");
+        }  
     }
 
-    [HttpGet("all/{topicId}")]
-    public async Task<IActionResult> GetAllByIdAsync(int topicId)
+    [HttpGet("allById")]
+    public async Task<IActionResult> GetAllByIdAsync([FromQuery] params int[] topicId)
     {
-        var courses = await _service.GetAllByIdAsync(topicId);
-
-        if (courses == null || !courses.Any())
+        try
         {
-            return NotFound("No courses found.");
+            var courses = await _service.GetAllByIdAsync(topicId);
+            return Ok(courses);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
 
-        return Ok(courses);
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var course =  await _service.GetByIdAsync(id);
-        return Ok(course);
+        try
+        {
+            var course = await _service.GetByIdAsync(id);
+            return Ok(course);
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while getting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CourseDTO course)
     {
-        if (!ModelState.IsValid || course == null || course.Id != 0)
+        var validationResult = await _validator.ValidateAsync(course);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest(ModelState);
+            _logger.LogWarning($"Course: '{course.Name}' failed validation.");
+
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
+        try
+        {
+            await _service.CreateAsync(course);
+            return Created();
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while creating course.");
 
-        await _service.CreateAsync(course);
-
-        return Created();
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] CourseDTO course)
     {
-        await _service.UpdateAsync(course);
-        return NoContent();
+        var validationResult = await _validator.ValidateAsync(course);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+        }
+        try
+        {
+            await _service.UpdateAsync(course);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while updating course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        await _service.DeleteAsync(id);
-        return NoContent();
+        try
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
     }
 }

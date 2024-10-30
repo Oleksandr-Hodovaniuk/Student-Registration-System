@@ -2,10 +2,7 @@
 
 namespace Application.Repositories;
 
-public interface ITopicRepository
+public interface ITopicRepository : IGenericRepository<Topic>
 {
-    public Task<IEnumerable<Topic>> GetAllAsync();
-    public Task CreateAsync(Topic topic);
-    public Task UpdateAsync(Topic topic);
-    public Task DeleteAsync(int id);
+
 }
