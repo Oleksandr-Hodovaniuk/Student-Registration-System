@@ -4,15 +4,15 @@ using Infrastructure.Persistence;
 
 namespace Infrastructure.Seeders;
 
-internal class DataSeeder(StudentRegistrationSystemDbContext dbContext) : ISeeder
+internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
 {
     public async Task SeedAsync()
     {
         var topics = GetTopics();
-        await dbContext.Topics.AddRangeAsync(topics);
+        await context.Topics.AddRangeAsync(topics);
 
         var courses = GetCourses();
-        await dbContext.Courses.AddRangeAsync(courses);
+        await context.Courses.AddRangeAsync(courses);
 
         courses[0].Topics.AddRange(new List<Topic> { topics[0], topics[4], topics[5] });
         courses[1].Topics.AddRange(new List<Topic> { topics[5], topics[6], topics[7], topics[14], topics[25] });
@@ -20,8 +20,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext dbContext) : ISeede
         courses[3].Topics.AddRange(new List<Topic> { topics[18], topics[19] });
         courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
 
-        await dbContext.Courses.AddRangeAsync(courses);
-        await dbContext.SaveChangesAsync();
+        await context.Courses.AddRangeAsync(courses);
+        await context.SaveChangesAsync();
     }
     private List<Topic> GetTopics()
     {
@@ -165,6 +165,4 @@ internal class DataSeeder(StudentRegistrationSystemDbContext dbContext) : ISeede
 
         };
     }
-
-
 }
