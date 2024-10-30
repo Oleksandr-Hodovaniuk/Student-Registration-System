@@ -41,16 +41,14 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(typeof(CourseProfile).Assembly);
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
-        //Registration of seeders.
-        services.AddScoped<IDataSeeder, CourseSeeder>();
-        services.AddScoped<IDataSeeder, TopicSeeder>();
+        //Registration of seeder.
+        services.AddScoped<ISeeder, DataSeeder>();
 
         //Registration of validators.
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
         services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 
         //Registration of services.
-        services.AddScoped<IDataSeederService, DataSeederService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ITopicService, TopicService>();
     }

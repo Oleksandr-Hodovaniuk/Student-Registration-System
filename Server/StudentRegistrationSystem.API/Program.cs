@@ -1,3 +1,4 @@
+using Application.Seeders;
 using Application.Services.Interfaces;
 using Infrastructure.Extensions;
 
@@ -15,7 +16,7 @@ var app = builder.Build();
 
 //Data seeding.
 var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<IDataSeederService>();
+var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
 await seeder.SeedAsync();
 
 //Configures the HTTP request pipeline.

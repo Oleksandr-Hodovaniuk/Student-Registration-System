@@ -94,7 +94,7 @@ public class CourseService : ICourseService
         }
         
         var course = _mapper.Map<Course>(dto);
-        course.Topics = topics;
+        //course.Topics = topics;
 
         await _repository.CreateAsync(course);
 
