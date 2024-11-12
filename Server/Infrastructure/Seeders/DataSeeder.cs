@@ -1,28 +1,70 @@
 ﻿using Application.Seeders;
 using Core.Entities;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Seeders;
+namespace Infrastructure.Seeders;
 
-internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDataSeeder
+internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
 {
     public async Task SeedAsync()
     {
-        if (await dbContext.Database.CanConnectAsync())
+        if (await context.Database.CanConnectAsync())
         {
-            if (!await dbContext.Courses.AnyAsync())
+            if (!await context.Topics.AnyAsync() && !await context.Courses.AnyAsync())
             {
-                var topics = GetCourses();
-                dbContext.Courses.AddRange(topics);
-                await dbContext.SaveChangesAsync();
-            }
-        }
-    }
+                var topics = GetTopics();
+                await context.Topics.AddRangeAsync(topics);
 
-    private IEnumerable<Course> GetCourses()
+                var courses = GetCourses();
+
+                courses[0].Topics.AddRange(new List<Topic> { topics[0], topics[4], topics[5] });
+                courses[1].Topics.AddRange(new List<Topic> { topics[5], topics[6], topics[7], topics[14], topics[25] });
+                courses[2].Topics.AddRange(new List<Topic> { topics[16], topics[17], topics[18] });
+                courses[3].Topics.AddRange(new List<Topic> { topics[18], topics[19] });
+                courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
+
+                await context.Courses.AddRangeAsync(courses);
+                await context.SaveChangesAsync();
+            }
+        }    
+    }
+    private List<Topic> GetTopics()
     {
-        List<Course> courses = [
-            new() 
+        return new List<Topic> {
+            new() { Name = "C#"},
+            new() { Name = "PHP"},
+            new() { Name = "Java"},
+            new() { Name = "C++"},
+            new() { Name = "Python"},
+            new() { Name = "JavaScript"},
+            new() { Name = "HTML"},
+            new() { Name = "CSS"},
+            new() { Name = "SQL"},
+            new() { Name = "Entity Framework"},
+            new() { Name = "ADO.NET"},
+            new() { Name = "WPF"},
+            new() { Name = "OOP"},
+            new() { Name = "Angular"},
+            new() { Name = "React"},
+            new() { Name = "R"},
+            new() { Name = "Data Science"},
+            new() { Name = "Machine Learning"},
+            new() { Name = "Algorithms"},
+            new() { Name = "Cybersecurity"},
+            new() { Name = "Android"},
+            new() { Name = "iOS"},
+            new() { Name = "SQLite"},
+            new() { Name = "Firebase"},
+            new() { Name = "GitHub"},
+            new() { Name = "Node.js"},
+            new() { Name = "RESTful APIs"}
+        };
+    }
+    private List<Course> GetCourses()
+    {
+        return new List<Course> {
+            new()
             {
                Name = "CodeQuest",
                Description = "An intensive training course that combines" +
@@ -33,8 +75,9 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " create real-world projects using frameworks and libraries." +
                 " The course will help you gain practical skills and prepare" +
                 " you for a professional path in the IT industry.",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2024-12-1 14:30:00.1234567"),
+               Author = "SkillForge Academy",
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2024-12-1"),
                Duration = 56
             },
             new()
@@ -54,8 +97,9 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " create your own complete web application, which can be showcased" +
                 " to potential employers, providing an excellent foundation for" +
                 " your career in the IT industry.",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-1-1 14:30:00.1234567"),
+               Author = "ProCode Institute",
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-1-1"),
                Duration = 84
             },
             new()
@@ -77,8 +121,9 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " of projects that showcase your ability to turn raw data into actionable" +
                 " insights, equipping you with the skills necessary for a successful" +
                 " career in data science.",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2024-11-1 14:30:00.1234567"),
+               Author = "InnovateTech Education",
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2024-11-1"),
                Duration = 70
             },
             new()
@@ -97,8 +142,9 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                 " the end of this course, you will be equipped with the knowledge and skills needed" +
                 " to pursue a career in cybersecurity and contribute to the protection of sensitive" +
                 " data in organizations.",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-1-10 14:30:00.1234567"),
+               Author = "NextGen Learning Hub",
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-1-10"),
                Duration = 56
             },
             new()
@@ -117,13 +163,11 @@ internal class CourseSeeder(StudentRegistrationSystemDbContext dbContext) : IDat
                " of this course, you will have the confidence and expertise to create, publish, and" +
                " maintain your own mobile applications, setting you on a path toward a successful career" +
                " in mobile development.",
-               IsAvailable = true,
-               Beginning = DateTime.Parse("2025-2-13 14:30:00.1234567"),
+               Author = "Mastery Labs",
+               СreationDate = DateOnly.FromDateTime(DateTime.Now),
+               Beginning = DateOnly.Parse("2025-2-13"),
                Duration = 98
             }
-
-        ];
-
-        return courses;
+        };
     }
 }

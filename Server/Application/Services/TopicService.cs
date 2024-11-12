@@ -1,42 +1,78 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Core.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
-public class TopicService : ITopicService
+public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<TopicService> logger) : ITopicService
 {
-    private readonly IMapper _mapper;
-    private readonly ITopicRepository _repository;
-
-    public TopicService(ITopicRepository repository, IMapper mapper)
-    {
-        _mapper = mapper;
-        _repository = repository;
-    }
-
     public async Task<IEnumerable<TopicDTO>> GetAllAsync()
     {
-        var topics = await _repository.GetAllAsync();
-        return _mapper.Map<IEnumerable<TopicDTO>>(topics);
+        var topics = await repository.GetAllAsync();
+
+        if (!topics.Any())
+        {
+            logger.LogWarning("Topics don't exist.");
+
+            return Enumerable.Empty<TopicDTO>();
+        }
+
+        logger.LogInformation("Topics successfully returned.");
+
+        return mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
 
-    public async Task CreateAsync(TopicDTO topic)
+    public async Task CreateAsync(TopicDTO dto)
     {
-        var entity = _mapper.Map<Topic>(topic);
-        await _repository.CreateAsync(entity);
+        if (await repository.ExistsByNameAsync(dto.Name))
+        {
+            logger.LogWarning($"Topic with name: '{dto.Name}' already exists.");
+
+            throw new BusinessException($"Topic with name '{dto.Name}' already exists.");
+        }
+
+        var topic = mapper.Map<Topic>(dto);
+        await repository.CreateAsync(topic);
+
+        logger.LogInformation($"Topic: '{topic.Name}' successfully created.");
     }
 
-    public async Task UpdateAsync(TopicDTO topic)
+    public async Task UpdateAsync(TopicDTO dto)
     {
-        var entity = _mapper.Map<Topic>(topic);
-        await _repository.UpdateAsync(entity);
+        if (!await repository.ExistsByIdAsync(dto.Id))
+        {
+            logger.LogError($"Topic with Id: '{dto.Id}' doesn't exist.");
+
+            throw new NotFoundException($"Topic with Id: '{dto.Id}' doesn't exist.");
+        }
+        if (await repository.ExistsByNameAsync(dto.Name))
+        {
+            logger.LogWarning($"Topic with name: '{dto.Name}' already exists.");
+
+            throw new BusinessException($"Topic with name '{dto.Name}' already exists.");
+        }
+
+        var topic = mapper.Map<Topic>(dto);
+        await repository.UpdateAsync(topic);
+
+        logger.LogInformation($"Topic with Id: '{topic.Id}' successfully updated.");
     }
 
     public async Task DeleteAsync(int id)
     {
-        await _repository.DeleteAsync(id);
+        if (!await repository.ExistsByIdAsync(id))
+        {
+            logger.LogError($"Topic with Id: '{id}' doesn't exist.");
+
+            throw new NotFoundException($"Topic with Id: '{id}' doesn't exist.");
+        }
+        
+        await repository.DeleteAsync(id);
+
+        logger.LogInformation($"Topic with Id: '{id}' successfully deleted.");
     }
 }

@@ -1,13 +1,11 @@
-﻿using Core.Entities;
+﻿using Application.DTOs;
+using Core.Entities;
 
 namespace Application.Repositories;
 
-public interface ICourseRepository
+public interface ICourseRepository : IGenericRepository<Course>
 {
-    public Task<IEnumerable<Course>> GetAllAsync();
-    public Task<IEnumerable<Course>> GetAllByIdAsync(params int[] topicId);
-    public Task<Course?> GetByIdAsync(int id);
-    public Task CreateAsync(Course course);
-    public Task UpdateAsync(Course course);
-    public Task DeleteAsync(int id);
+    public Task<IEnumerable<Course>> GetAllByIdAsync(params int[] topicsId);
+
+    public Task<List<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics);
 }

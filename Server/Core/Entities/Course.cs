@@ -5,8 +5,9 @@ public class Course
     public int Id { get; set; }
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
-    public bool IsAvailable { get; set; }
-    public DateTime Beginning { get; set; }
+    public string Author { get; set; } = default!;
+    public DateOnly СreationDate { get; set; }
+    public DateOnly Beginning { get; set; }
     public short Duration { get; set; }
-    public IEnumerable<Topic> Topics { get; set; } = default!;
+    public List<Topic> Topics { get; set; } = new();
 }
