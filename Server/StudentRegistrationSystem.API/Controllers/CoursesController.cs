@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
-[Route("api/[controller]")]
+[Route("api/courses")]
 [ApiController]
 public class CoursesController : ControllerBase
 {

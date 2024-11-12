@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudentRegistrationSystem.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/topics")]
 [ApiController]
 public class TopicsController : ControllerBase
 {
