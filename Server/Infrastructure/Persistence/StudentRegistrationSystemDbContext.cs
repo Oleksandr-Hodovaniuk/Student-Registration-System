@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Persistence;
 
 public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) 
-    :IdentityDbContext<User>(options)
+    :DbContext(options)
 {
     internal DbSet<Course> Courses { get; set; }
     internal DbSet<Topic> Topics { get; set; }

@@ -49,10 +49,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
         services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 
-        //Registration of identity.
-        services.AddIdentityApiEndpoints<User>()
-            .AddEntityFrameworkStores<StudentRegistrationSystemDbContext>();
-
         //Registration of services.
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ITopicService, TopicService>();
