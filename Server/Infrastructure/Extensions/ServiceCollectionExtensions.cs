@@ -14,6 +14,7 @@ using Application.Validators;
 using Infrastructure.Seeders;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using Core.Entities;
 
 namespace Infrastructure.Extensions;
 
@@ -47,6 +48,10 @@ public static class ServiceCollectionExtensions
         //Registration of validators.
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
         services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+
+        //Registration of identity.
+        services.AddIdentityApiEndpoints<User>()
+            .AddEntityFrameworkStores<StudentRegistrationSystemDbContext>();
 
         //Registration of services.
         services.AddScoped<ICourseService, CourseService>();
