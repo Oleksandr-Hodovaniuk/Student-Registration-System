@@ -1,12 +1,12 @@
 using Application.Seeders;
-using Core.Entities;
 using Infrastructure.Extensions;
-using StudentRegistrationSystem.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-////Adds swagger authorization configuration.
-builder.AddPresentation();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 //Adds custom services to the container and connect to a database.
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -26,8 +26,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapGroup("api/identity").MapIdentityApi<User>();
 
 app.UseAuthorization();
 
