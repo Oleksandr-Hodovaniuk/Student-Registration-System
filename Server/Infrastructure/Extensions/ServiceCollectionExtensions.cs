@@ -14,7 +14,6 @@ using Application.Validators;
 using Infrastructure.Seeders;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using Core.Entities;
 
 namespace Infrastructure.Extensions;
 
