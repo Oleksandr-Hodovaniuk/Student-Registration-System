@@ -76,8 +76,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " The course will help you gain practical skills and prepare" +
                 " you for a professional path in the IT industry.",
                Author = "SkillForge Academy",
-               СreationDate = DateOnly.FromDateTime(DateTime.Now),
-               Beginning = DateOnly.Parse("2024-12-1"),
+               СreationDate = DateTime.Now,
+               Beginning = DateTime.Parse("2024-12-1"),
                Duration = 56
             },
             new()
@@ -98,8 +98,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " to potential employers, providing an excellent foundation for" +
                 " your career in the IT industry.",
                Author = "ProCode Institute",
-               СreationDate = DateOnly.FromDateTime(DateTime.Now),
-               Beginning = DateOnly.Parse("2025-1-1"),
+               СreationDate = DateTime.Now,
+               Beginning = DateTime.Parse("2025-1-1"),
                Duration = 84
             },
             new()
@@ -122,8 +122,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " insights, equipping you with the skills necessary for a successful" +
                 " career in data science.",
                Author = "InnovateTech Education",
-               СreationDate = DateOnly.FromDateTime(DateTime.Now),
-               Beginning = DateOnly.Parse("2024-11-1"),
+               СreationDate = DateTime.Now,
+               Beginning = DateTime.Parse("2024-11-1"),
                Duration = 70
             },
             new()
@@ -143,8 +143,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " to pursue a career in cybersecurity and contribute to the protection of sensitive" +
                 " data in organizations.",
                Author = "NextGen Learning Hub",
-               СreationDate = DateOnly.FromDateTime(DateTime.Now),
-               Beginning = DateOnly.Parse("2025-1-10"),
+               СreationDate = DateTime.Now,
+               Beginning = DateTime.Parse("2025-1-10"),
                Duration = 56
             },
             new()
@@ -164,8 +164,8 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                " maintain your own mobile applications, setting you on a path toward a successful career" +
                " in mobile development.",
                Author = "Mastery Labs",
-               СreationDate = DateOnly.FromDateTime(DateTime.Now),
-               Beginning = DateOnly.Parse("2025-2-13"),
+               СreationDate = DateTime.Now,
+               Beginning = DateTime.Parse("2025-2-13"),
                Duration = 98
             }
         };
