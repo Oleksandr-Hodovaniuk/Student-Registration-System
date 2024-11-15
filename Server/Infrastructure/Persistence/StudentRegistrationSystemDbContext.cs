@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Persistence;
 
 public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) 
-    :DbContext(options)
+    :IdentityDbContext<User>(options)
 {
     internal DbSet<Course> Courses { get; set; }
     internal DbSet<Topic> Topics { get; set; }
@@ -18,5 +18,6 @@ public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistra
         //Configuring entities.
         modelBuilder.ApplyConfiguration(new TopicConfiguration());
         modelBuilder.ApplyConfiguration(new CourseConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
     }
 }

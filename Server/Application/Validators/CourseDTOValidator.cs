@@ -24,7 +24,7 @@ public class CourseDTOValidator : AbstractValidator<CourseDTO>
 
         RuleFor(x => x.Beginning)
             .NotEmpty().WithMessage("Beginning date is required.")
-            .GreaterThan(DateOnly.FromDateTime(DateTime.Now.AddDays(1)))
+            .GreaterThan(DateTime.Now.AddDays(1).Date)
             .WithMessage("Beginning date must be at least one day in the future.");
 
         RuleFor(x => x.Duration)
