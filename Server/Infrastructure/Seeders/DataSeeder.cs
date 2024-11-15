@@ -11,7 +11,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
     {
         if (await context.Database.CanConnectAsync())
         {
-            if (!await context.Topics.AnyAsync() && !await context.Courses.AnyAsync())
+            if (!await context.Topics.AnyAsync() && !await context.Courses.AnyAsync() && !await context.Users.AnyAsync())
             {
                 var topics = GetTopics();
                 await context.Topics.AddRangeAsync(topics);
@@ -25,6 +25,17 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 courses[4].Topics.AddRange(new List<Topic> { topics[20], topics[21], topics[22], topics[23] });
 
                 await context.Courses.AddRangeAsync(courses);
+
+                var users = GetUsers();
+
+                users[0].Courses.Add(courses[0]);
+                users[0].Courses.Add(courses[1]);
+                users[1].Courses.Add(courses[1]);
+                users[2].Courses.Add(courses[2]);
+                users[3].Courses.Add(courses[3]);
+                users[4].Courses.Add(courses[4]);
+
+                await context.Users.AddRangeAsync(users);
                 await context.SaveChangesAsync();
             }
         }    
@@ -168,6 +179,16 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                Beginning = DateTime.Parse("2025-2-13"),
                Duration = 98
             }
+        };
+    }
+    private List<User> GetUsers()
+    {
+        return new List<User> {
+            new User { Name = "John", LastName = "Doe", Age = 22 },
+            new User { Name = "Jane", LastName = "Smith", Age = 28 },
+            new User { Name = "Emily", LastName = "Johnson", Age = 24 },
+            new User { Name = "Michael", LastName = "Brown", Age = 30 },
+            new User { Name = "Sarah", LastName = "Williams", Age = 26 }
         };
     }
 }
