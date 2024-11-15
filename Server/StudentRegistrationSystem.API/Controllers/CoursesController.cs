@@ -1,7 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Services.Interfaces;
-using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 

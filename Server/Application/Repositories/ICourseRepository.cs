@@ -3,7 +3,7 @@ using Core.Entities;
 
 namespace Application.Repositories;
 
-public interface ICourseRepository : IGenericRepository<Course>
+public interface ICourseRepository : IGenericRepository<Course, int>
 {
     public Task<IEnumerable<Course>> GetAllByIdAsync(params int[] topicsId);
 
