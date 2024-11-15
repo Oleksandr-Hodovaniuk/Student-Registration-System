@@ -37,6 +37,18 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
 
                 await context.Users.AddRangeAsync(users);
                 await context.SaveChangesAsync();
+
+                var userCourses = new List<UserCourse>();
+
+                userCourses.Add(new UserCourse { UserId = users[0].Id, CourseId = courses[0].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourse { UserId = users[0].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourse { UserId = users[1].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourse { UserId = users[2].Id, CourseId = courses[2].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourse { UserId = users[3].Id, CourseId = courses[3].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourse { UserId = users[4].Id, CourseId = courses[4].Id, RegistrationDate = DateTime.Now });
+
+                await context.UserCourses.AddRangeAsync(userCourses);
+                await context.SaveChangesAsync();
             }
         }    
     }

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Application.Mappers;
 
 namespace Infrastructure.Extensions;
 
@@ -36,10 +37,12 @@ public static class ServiceCollectionExtensions
         });
 
         //Registration of repositories.
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<ITopicRepository, TopicRepository>();
 
         //Registration of mappers.
+        services.AddAutoMapper(typeof(UserCourseProfile).Assembly);
         services.AddAutoMapper(typeof(CourseProfile).Assembly);
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
@@ -55,6 +58,7 @@ public static class ServiceCollectionExtensions
             .AddEntityFrameworkStores<StudentRegistrationSystemDbContext>();
 
         //Registration of services.
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<ITopicService, TopicService>();
     }
