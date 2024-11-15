@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISeeder, DataSeeder>();
 
         //Registration of validators.
+        services.AddScoped<IValidator<UserCourseDTO>, UserCourseDTOValidator>();
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
         services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 

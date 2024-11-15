@@ -196,11 +196,11 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
     private List<User> GetUsers()
     {
         return new List<User> {
-            new User { Name = "John", LastName = "Doe", Age = 22 },
-            new User { Name = "Jane", LastName = "Smith", Age = 28 },
-            new User { Name = "Emily", LastName = "Johnson", Age = 24 },
-            new User { Name = "Michael", LastName = "Brown", Age = 30 },
-            new User { Name = "Sarah", LastName = "Williams", Age = 26 }
+            new User { Name = "John", LastName = "Doe", Age = 22, Email = "john.doe91@example.com" },
+            new User { Name = "Jane", LastName = "Smith", Age = 28, Email = "sunny.sky22@domain.net"},
+            new User { Name = "Emily", LastName = "Johnson", Age = 24, Email = "creative.mind78@webmail.org" },
+            new User { Name = "Michael", LastName = "Brown", Age = 30, Email = "quick.runner47@fastmail.com" },
+            new User { Name = "Sarah", LastName = "Williams", Age = 26, Email = "blue.ocean19@service.io" }
         };
     }
 }

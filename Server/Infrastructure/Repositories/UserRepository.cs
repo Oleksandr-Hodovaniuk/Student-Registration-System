@@ -16,9 +16,10 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
             .ToListAsync();
     }
 
-    public Task CreateAsync(User entity)
+    public async Task CreateAsync(User user)
     {
-        throw new NotImplementedException();
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
     }
 
     public Task DeleteAsync(int id)
@@ -41,5 +42,10 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
     public Task UpdateAsync(User entity)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> ExistsByEmailAsync(string email)
+    {
+        return await context.Users.AnyAsync(u => u.Email == email);
     }
 }
