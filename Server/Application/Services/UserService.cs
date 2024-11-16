@@ -56,6 +56,34 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         logger.LogInformation($"User: '{user.Name} {user.LastName}' successfully created.");
     }
 
+    public async Task UpdateAsync(UpdateUserDTO dto)
+    {
+        var user = await repository.GetByIdAsync(dto.Id);
+
+        if (user == null)
+        {
+            logger.LogWarning($"User with id: '{dto.Id}' doesn't exist.");
+
+            throw new NotFoundException($"User with id: '{dto.Id}' doesn't exist.");
+        }
+
+        if (user.Email != dto.Email && await repository.ExistsByEmailAsync(dto.Email!))
+        {
+            logger.LogWarning($"Email: '{dto.Email}' is already taken by another user.");
+
+            throw new BusinessException($"Email: '{dto.Email}' is already taken by another user.");
+        }   
+
+        if (user.Name != dto.Name || user.LastName != dto.LastName || user.Age != dto.Age)
+        {
+            mapper.Map(dto, user);
+        }
+        
+        await repository.UpdateAsync(user);
+
+        logger.LogInformation($"User with id: '{user.Id}' successfully updated.");
+    }
+
     public async Task DeleteAsync(string id)
     {
         if (!await repository.ExistsByIdAsync(id))
@@ -68,12 +96,5 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         await repository.DeleteAsync(id);
 
         logger.LogInformation($"User with id: '{id}' successfully deleted.");
-    }
-
-
-
-    public Task UpdateAsync(UserCoursesDTO t)
-    {
-        throw new NotImplementedException();
     }
 }

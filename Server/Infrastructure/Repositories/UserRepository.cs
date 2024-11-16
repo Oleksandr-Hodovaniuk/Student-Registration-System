@@ -1,7 +1,9 @@
-﻿using Application.Repositories;
+﻿using Application.DTOs;
+using Application.Repositories;
 using Core.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Infrastructure.Repositories;
 
@@ -30,17 +32,18 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
         await context.SaveChangesAsync();
     }
 
+    public async Task UpdateAsync(User user)
+    {
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync(string id)
     {
         var user = await context.Users.FindAsync(id);
 
         context.Users.Remove(user!);
         await context.SaveChangesAsync();
-    }
-
-    public Task UpdateAsync(User entity)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)

@@ -122,10 +122,6 @@ public class CoursesController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-        catch (BusinessException ex)
-        {
-            return BadRequest(ex.Message);
-        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred while updating course.");
