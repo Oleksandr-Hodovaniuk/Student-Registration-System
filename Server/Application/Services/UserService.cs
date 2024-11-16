@@ -77,11 +77,15 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         if (user.Name != dto.Name || user.LastName != dto.LastName || user.Age != dto.Age)
         {
             mapper.Map(dto, user);
-        }
-        
-        await repository.UpdateAsync(user);
 
-        logger.LogInformation($"User with id: '{user.Id}' successfully updated.");
+            await repository.UpdateAsync(user);
+
+            logger.LogInformation($"User with id: '{user.Id}' successfully updated.");
+        }
+        else
+        {
+            logger.LogInformation($"User with id: '{user.Id}' has no data to update.");
+        }           
     }
 
     public async Task DeleteAsync(string id)
