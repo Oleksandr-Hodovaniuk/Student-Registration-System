@@ -21,8 +21,7 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
         return await context.Users
             .Include(u => u.UserCourses.OrderBy(uc => uc.Course.Name))
             .ThenInclude(uc => uc.Course)
-            .FirstOrDefaultAsync(u => u.Id == id);
-            
+            .FirstOrDefaultAsync(u => u.Id == id);     
     }
 
     public async Task CreateAsync(User user)
