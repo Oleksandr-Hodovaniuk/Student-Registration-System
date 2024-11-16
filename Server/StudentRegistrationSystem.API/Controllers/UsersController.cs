@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
             await _service.DeleteAsync(id);
             return NoContent();
         }
-        catch (BusinessException ex)
+        catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
         }
