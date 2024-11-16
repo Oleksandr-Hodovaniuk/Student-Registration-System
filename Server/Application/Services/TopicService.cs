@@ -45,9 +45,9 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
     {
         if (!await repository.ExistsByIdAsync(dto.Id))
         {
-            logger.LogError($"Topic with Id: '{dto.Id}' doesn't exist.");
+            logger.LogError($"Topic with id: '{dto.Id}' doesn't exist.");
 
-            throw new NotFoundException($"Topic with Id: '{dto.Id}' doesn't exist.");
+            throw new NotFoundException($"Topic with id: '{dto.Id}' doesn't exist.");
         }
         if (await repository.ExistsByNameAsync(dto.Name))
         {
@@ -59,20 +59,20 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
         var topic = mapper.Map<Topic>(dto);
         await repository.UpdateAsync(topic);
 
-        logger.LogInformation($"Topic with Id: '{topic.Id}' successfully updated.");
+        logger.LogInformation($"Topic with id: '{topic.Id}' successfully updated.");
     }
 
     public async Task DeleteAsync(int id)
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Topic with Id: '{id}' doesn't exist.");
+            logger.LogError($"Topic with id: '{id}' doesn't exist.");
 
-            throw new NotFoundException($"Topic with Id: '{id}' doesn't exist.");
+            throw new NotFoundException($"Topic with id: '{id}' doesn't exist.");
         }
         
         await repository.DeleteAsync(id);
 
-        logger.LogInformation($"Topic with Id: '{id}' successfully deleted.");
+        logger.LogInformation($"Topic with id: '{id}' successfully deleted.");
     }
 }

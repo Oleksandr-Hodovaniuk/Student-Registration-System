@@ -46,14 +46,14 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Course with Id: '{id}' doesn't exist.");
+            logger.LogError($"Course with id: '{id}' doesn't exist.");
 
-            throw new NotFoundException($"Course with Id '{id}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{id}' doesn't exist.");
         }
 
         var course = await repository.GetByIdAsync(id);
 
-        logger.LogInformation($"Course with Id: '{id}' successfully returned.");
+        logger.LogInformation($"Course with id: '{id}' successfully returned.");
 
         return mapper.Map<CourseDTO>(course);
     }
@@ -94,9 +94,9 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(dto.Id))
         {
-            logger.LogError($"Course with Id: '{dto.Id}' doesn't exist.");
+            logger.LogError($"Course with id: '{dto.Id}' doesn't exist.");
 
-            throw new NotFoundException($"Course with Id '{dto.Id}' doesn't exist.");     
+            throw new NotFoundException($"Course with id '{dto.Id}' doesn't exist.");     
         }
         if (await repository.ExistsByNameAsync(dto.Name))
         {
@@ -108,20 +108,20 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         var course = mapper.Map<Course>(dto);
         await repository.UpdateAsync(course);
 
-        logger.LogInformation($"Course with Id: '{course.Id}' successfully updated.");
+        logger.LogInformation($"Course with id: '{course.Id}' successfully updated.");
     }
 
     public async Task DeleteAsync(int id)
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Course with Id: '{id}' doesn't exist.");
+            logger.LogError($"Course with id: '{id}' doesn't exist.");
 
-            throw new NotFoundException($"Course with Id '{id}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{id}' doesn't exist.");
         }
 
         await repository.DeleteAsync(id);
 
-        logger.LogInformation($"Course with Id: '{id}' successfully deleted.");
+        logger.LogInformation($"Course with id: '{id}' successfully deleted.");
     }  
 }

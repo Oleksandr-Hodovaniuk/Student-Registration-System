@@ -37,6 +37,26 @@ public class UsersController : ControllerBase
         }
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByIdAsync(string id)
+    {
+        try
+        {
+            var user = await _service.GetByIdAsync(id);
+            return Ok(user);
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync(CreateUserDTO dto)
     {
