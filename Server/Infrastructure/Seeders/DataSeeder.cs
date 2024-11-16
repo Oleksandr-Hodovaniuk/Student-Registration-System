@@ -100,7 +100,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " you for a professional path in the IT industry.",
                Author = "SkillForge Academy",
                СreationDate = DateTime.Now,
-               Beginning = DateTime.Parse("2024-12-1"),
+               Beginning = DateTime.Now.AddDays(10),
                Duration = 56
             },
             new()
@@ -122,7 +122,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " your career in the IT industry.",
                Author = "ProCode Institute",
                СreationDate = DateTime.Now,
-               Beginning = DateTime.Parse("2025-1-1"),
+               Beginning = DateTime.Now.AddDays(15),
                Duration = 84
             },
             new()
@@ -146,7 +146,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " career in data science.",
                Author = "InnovateTech Education",
                СreationDate = DateTime.Now,
-               Beginning = DateTime.Parse("2024-11-1"),
+               Beginning = DateTime.Now.AddDays(20),
                Duration = 70
             },
             new()
@@ -167,7 +167,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                 " data in organizations.",
                Author = "NextGen Learning Hub",
                СreationDate = DateTime.Now,
-               Beginning = DateTime.Parse("2025-1-10"),
+               Beginning = DateTime.Now.AddDays(25),
                Duration = 56
             },
             new()
@@ -188,7 +188,7 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
                " in mobile development.",
                Author = "Mastery Labs",
                СreationDate = DateTime.Now,
-               Beginning = DateTime.Parse("2025-2-13"),
+               Beginning = DateTime.Now.AddDays(30),
                Duration = 98
             }
         };

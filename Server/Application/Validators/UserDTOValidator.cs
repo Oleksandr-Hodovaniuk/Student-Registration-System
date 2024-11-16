@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace Application.Validators;
 
-public class UserCourseDTOValidator : AbstractValidator<UserCourseDTO>
+public class UserDTOValidator : AbstractValidator<CreateUserDTO>
 {
-	public UserCourseDTOValidator()
+	public UserDTOValidator()
 	{
         RuleFor(x => x.Name)
 			.NotEmpty().WithMessage("Name is required.")

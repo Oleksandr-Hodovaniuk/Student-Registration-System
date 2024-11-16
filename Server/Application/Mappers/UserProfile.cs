@@ -5,11 +5,12 @@ using Core.Models;
 
 namespace Application.Mappers;
 
-public class UserCourseProfile : Profile
+public class UserProfile : Profile
 {
-    public UserCourseProfile()
+    public UserProfile()
     {
-        CreateMap<User, UserCourseDTO>()
+        CreateMap<User, UserCoursesDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
@@ -25,20 +26,11 @@ public class UserCourseProfile : Profile
                 : new List<CourseData>()
             ));
 
-        CreateMap<UserCourseDTO, User>()
+        CreateMap<CreateUserDTO, User>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-            .ForMember(dest => dest.UserCourses, opt => opt.MapFrom(src =>
-                src.Courses != null
-                ? src.Courses.Select(course => new UserCourse
-                {
-                    Course = new Course { Name = course.Name, Beginning = course.StudyDate },
-                    RegistrationDate = course.RegistrationDate
-                }).ToList()
-                : new List<UserCourse>()
-            ));
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
     }
 }
 
