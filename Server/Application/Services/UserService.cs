@@ -10,7 +10,7 @@ namespace Application.Services;
 
 public class UserService(IUserRepository repository, IMapper mapper, ILogger<CourseService> logger) : IUserService
 {
-    public async Task<IEnumerable<UserCourseDTO>> GetAllAsync()
+    public async Task<IEnumerable<UserCoursesDTO>> GetAllAsync()
     {
         var users = await repository.GetAllAsync();
 
@@ -18,14 +18,19 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         {
             logger.LogWarning("Users don't exist.");
 
-            return Enumerable.Empty<UserCourseDTO>();
+            return Enumerable.Empty<UserCoursesDTO>();
         }
 
         logger.LogInformation("Users successfully returned.");
 
-        return mapper.Map<IEnumerable<UserCourseDTO>>(users);
+        return mapper.Map<IEnumerable<UserCoursesDTO>>(users);
     }
-    public async Task CreateAsync(UserCourseDTO dto)
+    public Task<UserCoursesDTO> GetByIdAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task CreateAsync(CreateUserDTO dto)
     {
         if (await repository.ExistsByEmailAsync(dto.Email))
         {
@@ -40,14 +45,23 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         logger.LogInformation($"User: '{user.Name} {user.LastName}' successfully created.");
     }
 
-    public Task DeleteAsync(string id)
+    public async Task DeleteAsync(string id)
     {
-        throw new NotImplementedException();
+        if (!await repository.ExistsByIdAsync(id))
+        {
+            logger.LogWarning($"User with id: '{id}' doesn't exist.");
+
+            throw new BusinessException($"User with id: '{id}' doesn't exist.");
+        }
+
+        await repository.DeleteAsync(id);
+
+        logger.LogInformation($"User with id: '{id}' successfully deleted.");
     }
 
 
 
-    public Task UpdateAsync(UserCourseDTO t)
+    public Task UpdateAsync(UserCoursesDTO t)
     {
         throw new NotImplementedException();
     }

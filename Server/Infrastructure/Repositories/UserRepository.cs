@@ -15,6 +15,10 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
             .OrderBy(u => u.Name)
             .ToListAsync();
     }
+    public Task<User?> GetByIdAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
 
     public async Task CreateAsync(User user)
     {
@@ -22,22 +26,13 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
         await context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int id)
+    public async Task DeleteAsync(string id)
     {
-        throw new NotImplementedException();
-    }
+        var user = await context.Users.FindAsync(id);
 
-    public Task<bool> ExistsByIdAsync(string id)
-    {
-        throw new NotImplementedException();
+        context.Users.Remove(user!);
+        await context.SaveChangesAsync();
     }
-
-    public Task<bool> ExistsByNameAsync(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    
 
     public Task UpdateAsync(User entity)
     {
@@ -47,5 +42,10 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
     public async Task<bool> ExistsByEmailAsync(string email)
     {
         return await context.Users.AnyAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> ExistsByIdAsync(string id)
+    {
+        return await context.Users.AnyAsync(u => u.Id == id);
     }
 }

@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITopicRepository, TopicRepository>();
 
         //Registration of mappers.
-        services.AddAutoMapper(typeof(UserCourseProfile).Assembly);
+        services.AddAutoMapper(typeof(UserProfile).Assembly);
         services.AddAutoMapper(typeof(CourseProfile).Assembly);
         services.AddAutoMapper(typeof(TopicProfile).Assembly);
 
@@ -50,7 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISeeder, DataSeeder>();
 
         //Registration of validators.
-        services.AddScoped<IValidator<UserCourseDTO>, UserCourseDTOValidator>();
+        services.AddScoped<IValidator<CreateUserDTO>, UserDTOValidator>();
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
         services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
 

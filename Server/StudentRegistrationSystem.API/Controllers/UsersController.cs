@@ -11,10 +11,10 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _service;
-    private readonly IValidator<UserCourseDTO> _validator;
+    private readonly IValidator<CreateUserDTO> _validator;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService service, IValidator<UserCourseDTO> validator, ILogger<UsersController> logger)
+    public UsersController(IUserService service, IValidator<CreateUserDTO> validator, ILogger<UsersController> logger)
     {
         _logger = logger;
         _validator = validator;
@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(UserCourseDTO dto)
+    public async Task<IActionResult> CreateAsync(CreateUserDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
 
@@ -60,6 +60,26 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred while creating course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(string id)
+    {
+        try
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
 
             return StatusCode(500, "Internal server error.");
         }
