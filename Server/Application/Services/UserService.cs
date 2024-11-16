@@ -25,9 +25,20 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
 
         return mapper.Map<IEnumerable<UserCoursesDTO>>(users);
     }
-    public Task<UserCoursesDTO> GetByIdAsync(string id)
+    public async Task<UserCoursesDTO> GetByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        if(!await repository.ExistsByIdAsync(id))
+        {
+            logger.LogWarning($"User with id: '{id}' doesn't exist.");
+
+            throw new NotFoundException($"User with id: '{id}' doesn't exist.");
+        }
+
+        var user = await repository.GetByIdAsync(id);
+
+        logger.LogInformation($"User with id: '{id}' successfully returned.");
+
+        return mapper.Map<UserCoursesDTO>(user);
     }
 
     public async Task CreateAsync(CreateUserDTO dto)

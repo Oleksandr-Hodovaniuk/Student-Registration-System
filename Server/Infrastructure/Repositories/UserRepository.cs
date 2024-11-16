@@ -15,9 +15,14 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
             .OrderBy(u => u.Name)
             .ToListAsync();
     }
-    public Task<User?> GetByIdAsync(string id)
+
+    public async Task<User?> GetByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        return await context.Users
+            .Include(u => u.UserCourses.OrderBy(uc => uc.Course.Name))
+            .ThenInclude(uc => uc.Course)
+            .FirstOrDefaultAsync(u => u.Id == id);
+            
     }
 
     public async Task CreateAsync(User user)
