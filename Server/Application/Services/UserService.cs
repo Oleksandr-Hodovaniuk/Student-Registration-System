@@ -51,7 +51,7 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
         {
             logger.LogWarning($"User with id: '{id}' doesn't exist.");
 
-            throw new BusinessException($"User with id: '{id}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{id}' doesn't exist.");
         }
 
         await repository.DeleteAsync(id);
