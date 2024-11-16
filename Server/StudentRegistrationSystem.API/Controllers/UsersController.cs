@@ -11,13 +11,16 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _service;
-    private readonly IValidator<CreateUserDTO> _validator;
+    private readonly IValidator<CreateUserDTO> _createValidator;
+    private readonly IValidator<UpdateUserDTO> _updateValidator;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService service, IValidator<CreateUserDTO> validator, ILogger<UsersController> logger)
+    public UsersController(IUserService service, IValidator<CreateUserDTO> createValidator,
+        IValidator<UpdateUserDTO> updateValidator, ILogger<UsersController> logger)
     {
         _logger = logger;
-        _validator = validator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
         _service = service;
     }
 
@@ -60,7 +63,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync(CreateUserDTO dto)
     {
-        var validationResult = await _validator.ValidateAsync(dto);
+        var validationResult = await _createValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
@@ -82,6 +85,38 @@ public class UsersController : ControllerBase
             _logger.LogError(ex, "An unexpected error occurred while creating course.");
 
             return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateAsync(UpdateUserDTO dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            _logger.LogWarning($"User: '{dto.Name} {dto.LastName}' failed validation.");
+
+            return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+        }
+        try
+        {
+            await _service.UpdateAsync(dto);
+            return Created();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while creating course.");
+
+            return StatusCode(500, ex.Message);
         }
     }
 

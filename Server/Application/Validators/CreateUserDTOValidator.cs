@@ -1,12 +1,11 @@
 ﻿using Application.DTOs;
 using FluentValidation;
-using System.Xml.Linq;
 
 namespace Application.Validators;
 
-public class UserDTOValidator : AbstractValidator<CreateUserDTO>
+public class CreateUserDTOValidator : AbstractValidator<CreateUserDTO>
 {
-	public UserDTOValidator()
+	public CreateUserDTOValidator()
 	{
         RuleFor(x => x.Name)
 			.NotEmpty().WithMessage("Name is required.")

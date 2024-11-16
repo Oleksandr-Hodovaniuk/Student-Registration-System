@@ -4,6 +4,7 @@ using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Core.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
@@ -58,7 +59,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         return mapper.Map<CourseDTO>(course);
     }
 
-    public async Task CreateAsync(CourseDTO dto)
+    public async Task CreateAsync([FromBody] CourseDTO dto)
     {
         if (dto.Id != 0)
         {
@@ -90,19 +91,13 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         logger.LogInformation($"Course: '{course.Name}' successfully created.");
     }
 
-    public async Task UpdateAsync(CourseDTO dto)
+    public async Task UpdateAsync([FromBody] CourseDTO dto)
     {
         if (!await repository.ExistsByIdAsync(dto.Id))
         {
             logger.LogError($"Course with id: '{dto.Id}' doesn't exist.");
 
             throw new NotFoundException($"Course with id '{dto.Id}' doesn't exist.");     
-        }
-        if (await repository.ExistsByNameAsync(dto.Name))
-        {
-            logger.LogWarning($"Course with name: '{dto.Name}' already exists.");
-
-            throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
         var course = mapper.Map<Course>(dto);

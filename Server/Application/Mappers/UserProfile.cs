@@ -24,13 +24,20 @@ public class UserProfile : Profile
                     StudyDate = uc.Course.Beginning
                 }).ToList()
                 : new List<CourseData>()
-            ));
+                ));
 
         CreateMap<CreateUserDTO, User>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+
+        CreateMap<UpdateUserDTO, User>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom((src, dest) => string.IsNullOrEmpty(src.Name) ? dest.Name : src.Name))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom((src, dest) => string.IsNullOrEmpty(src.LastName) ? dest.LastName : src.LastName))
+            .ForMember(dest => dest.Age, opt => opt.MapFrom((src, dest) => src.Age.HasValue ? src.Age.Value : dest.Age))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom((src, dest) => string.IsNullOrEmpty(src.Email) ? dest.Email : src.Email));   
     }
 }
 
