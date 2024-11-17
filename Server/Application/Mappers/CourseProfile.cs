@@ -9,9 +9,9 @@ public class CourseProfile : Profile
 {
     public CourseProfile()
     {
-        CreateMap<CreateCourseDTO, Course>().ReverseMap();
+        CreateMap<CreateCourseDTO, Course>();
 
-        CreateMap<UpdateCourseDTO, Course>().ReverseMap();
+        CreateMap<UpdateCourseDTO, Course>();
 
         CreateMap<Course, CourseDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
