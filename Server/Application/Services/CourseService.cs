@@ -143,4 +143,34 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
 
         logger.LogInformation($"Topic with id: '{topicId}' successfully added to a course with id: '{courseId}'.");
     }
+
+    public async Task RemoveTopicAsync(int courseId, int topicId)
+    {
+        if (!await repository.ExistsByIdAsync(courseId))
+        {
+            logger.LogError($"Course with id: '{courseId}' doesn't exist.");
+
+            throw new NotFoundException($"Course with id '{courseId}' doesn't exist.");
+        }
+
+        if (!await repository.TopicExistsByIdAsync(topicId))
+        {
+            logger.LogError($"Topic with id: '{topicId}' doesn't exist.");
+
+            throw new NotFoundException($"Topic with id '{topicId}' doesn't exist.");
+        }
+
+        var course = await repository.GetByIdAsync(courseId);
+
+        if (!course!.Topics.Any(t => t.Id == topicId))
+        {
+            logger.LogError($"Course with id: '{courseId}' doesn't have a topic with id: '{topicId}'.");
+
+            throw new BusinessException($"Course with id: '{courseId}' doesn't have a topic with id: '{topicId}'.");
+        }
+
+        await repository.RemoveTopicAsync(courseId, topicId);
+
+        logger.LogInformation($"Topic with id: '{topicId}' successfully removed from a course with id: '{courseId}'.");
+    }
 }

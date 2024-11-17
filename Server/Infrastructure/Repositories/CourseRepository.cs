@@ -61,6 +61,15 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
         await context.SaveChangesAsync();
     }
 
+    public async Task RemoveTopicAsync(int courseId, int topicId)
+    {
+        var topic = await context.Topics.FindAsync(topicId);
+        var course = await context.Courses.FindAsync(courseId);
+        course?.Topics.Remove(topic!);
+
+        await context.SaveChangesAsync();
+    }
+
     public async Task<bool> ExistsByNameAsync(string name)
     {
         return await context.Courses.AnyAsync(c => c.Name == name);

@@ -12,6 +12,7 @@ public interface ICourseRepository
     public Task UpdateAsync(Course dto);
     public Task DeleteAsync(int id);
     public Task AddTopicAsync(int courseId, int topicId);
+    public Task RemoveTopicAsync(int courseId, int topicId);
     public Task<bool> ExistsByIdAsync(int id);
     public Task<bool> ExistsByNameAsync(string name);
     public Task<List<Topic>> TopicsExistsAsync(IEnumerable<UpdateTopicDTO> topics);
