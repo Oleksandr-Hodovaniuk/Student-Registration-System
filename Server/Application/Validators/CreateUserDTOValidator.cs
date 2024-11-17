@@ -24,5 +24,14 @@ public class CreateUserDTOValidator : AbstractValidator<CreateUserDTO>
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
             .Matches(@"^[a-zA-Z0-9._%+-]+@gmail\.com$").WithMessage("Email must be a valid Gmail address.");
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required.")
+            .Matches(@"^[a-zA-Z0-9._%+-]+$").WithMessage("The password can only contain letters, numbers, and the following characters: . _ % + -.")
+            .Length(8,60).WithMessage("Password must be between 8 and 60 characters.");
+
+        RuleFor(x => x.ConfirmPassword)
+            .NotEmpty().WithMessage("Confirm Password is required.")
+            .Equal(x => x.Password).WithMessage("Passwords do not match.");
     }
 }
