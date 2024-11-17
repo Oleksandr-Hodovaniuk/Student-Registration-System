@@ -10,13 +10,18 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService _service;
-    private readonly IValidator<CourseDTO> _validator;
+    private readonly IValidator<CreateCourseDTO> _createValidator;
+    private readonly IValidator<UpdateCourseDTO> _updateValidator;
     private readonly ILogger<CoursesController> _logger;
 
-    public CoursesController(ICourseService service, IValidator<CourseDTO> validator, ILogger<CoursesController> logger)
+    public CoursesController(ICourseService service,
+        IValidator<CreateCourseDTO> createValidator,
+        IValidator<UpdateCourseDTO> updateValidator,
+        ILogger<CoursesController> logger)
     {
         _service = service;
-        _validator = validator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
         _logger = logger;
     }
 
@@ -37,11 +42,11 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet("allById")]
-    public async Task<IActionResult> GetAllByIdAsync([FromQuery] params int[] topicId)
+    public async Task<IActionResult> GetAllByTopicsAsync([FromQuery] params int[] topicsIds)
     {
         try
         {
-            var courses = await _service.GetAllByIdAsync(topicId);
+            var courses = await _service.GetAllByTopicsAsync(topicsIds);
             return Ok(courses);
         }
         catch (Exception ex)
@@ -73,9 +78,9 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] CourseDTO course)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateCourseDTO course)
     {
-        var validationResult = await _validator.ValidateAsync(course);
+        var validationResult = await _createValidator.ValidateAsync(course);
 
         if (!validationResult.IsValid)
         {
@@ -105,9 +110,9 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] CourseDTO course)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseDTO dto)
     {
-        var validationResult = await _validator.ValidateAsync(course);
+        var validationResult = await _updateValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
@@ -115,7 +120,7 @@ public class CoursesController : ControllerBase
         }
         try
         {
-            await _service.UpdateAsync(course);
+            await _service.UpdateAsync(dto);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -139,6 +144,30 @@ public class CoursesController : ControllerBase
             return NoContent();
         }
         catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpPut("{courseId}/topics/{topicId}")]
+    public async Task<IActionResult> AddTopicAsync(int courseId, int topicId)
+    {
+        try
+        {
+            await _service.AddTopicAsync(courseId, topicId);
+            return NoContent();
+        }
+        catch (NotFoundException ex) 
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
         {
             return BadRequest(ex.Message);
         }

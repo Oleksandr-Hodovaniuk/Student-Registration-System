@@ -50,17 +50,28 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
         context.Courses.Remove(course!);
         await context.SaveChangesAsync();
     }
+
+
+    public async Task AddTopicAsync(int courseId, int topicId)
+    {
+        var topic = await context.Topics.FindAsync(topicId);
+        var course = await context.Courses.FindAsync(courseId);
+        course?.Topics.Add(topic!);
+
+        await context.SaveChangesAsync();
+    }
+
     public async Task<bool> ExistsByNameAsync(string name)
     {
-        return await context.Courses.AnyAsync(t => t.Name == name);
+        return await context.Courses.AnyAsync(c => c.Name == name);
     }
 
     public async Task<bool> ExistsByIdAsync(int id)
     {
-        return await context.Courses.AnyAsync(t => t.Id == id);
+        return await context.Courses.AnyAsync(c => c.Id == id);
     }
 
-    public async Task<List<Topic>> TopicsExistsAsync(IEnumerable<TopicDTO> topics)
+    public async Task<List<Topic>> TopicsExistsAsync(IEnumerable<UpdateTopicDTO> topics)
     {
         var topicsIds = topics.Select(t => t.Id).ToList();  //Gets all ids from TopicDTOs.
         var existingIds = await context.Topics     //Gets ids fropm Topics table that match the topicsIds.
@@ -74,5 +85,10 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
         }
  
         return await context.Topics.Where(t => existingIds.Contains(t.Id)).ToListAsync();  
+    }
+
+    public async Task<bool> TopicExistsByIdAsync(int id)
+    {
+        return await context.Topics.AnyAsync(t => t.Id == id);
     }
 }

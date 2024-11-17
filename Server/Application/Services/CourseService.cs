@@ -27,9 +27,9 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         return mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
 
-    public async Task<IEnumerable<CourseDTO>> GetAllByIdAsync( params int[] topicsId)
+    public async Task<IEnumerable<CourseDTO>> GetAllByTopicsAsync( params int[] topicsIds)
     {
-        var courses = await repository.GetAllByIdAsync(topicsId);
+        var courses = await repository.GetAllByIdAsync(topicsIds);
 
         if (!courses.Any())
         {
@@ -59,14 +59,8 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         return mapper.Map<CourseDTO>(course);
     }
 
-    public async Task CreateAsync([FromBody] CourseDTO dto)
+    public async Task CreateAsync([FromBody] CreateCourseDTO dto)
     {
-        if (dto.Id != 0)
-        {
-            logger.LogError("Field: 'id' must be 0.");
-
-            throw new BusinessException("Field: 'id' must be 0.");
-        }
         if (await repository.ExistsByNameAsync(dto.Name))
         {
             logger.LogWarning($"Course with name: '{dto.Name}' already exists.");
@@ -74,7 +68,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
             throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
-        var topics = await repository.TopicsExistsAsync(dto.Topics);
+        var topics = await repository.TopicsExistsAsync(dto.Topics!);
 
         if (!topics.Any())
         {
@@ -91,7 +85,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         logger.LogInformation($"Course: '{course.Name}' successfully created.");
     }
 
-    public async Task UpdateAsync([FromBody] CourseDTO dto)
+    public async Task UpdateAsync([FromBody] UpdateCourseDTO dto)
     {
         if (!await repository.ExistsByIdAsync(dto.Id))
         {
@@ -118,5 +112,35 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         await repository.DeleteAsync(id);
 
         logger.LogInformation($"Course with id: '{id}' successfully deleted.");
-    }  
+    }
+
+    public async Task AddTopicAsync(int courseId, int topicId)
+    {
+        if (!await repository.ExistsByIdAsync(courseId))
+        {
+            logger.LogError($"Course with id: '{courseId}' doesn't exist.");
+
+            throw new NotFoundException($"Course with id '{courseId}' doesn't exist.");
+        }
+
+        if (!await repository.TopicExistsByIdAsync(topicId))
+        {
+            logger.LogError($"Topic with id: '{topicId}' doesn't exist.");
+
+            throw new NotFoundException($"Topic with id '{topicId}' doesn't exist.");
+        }
+
+        var course = await repository.GetByIdAsync(courseId);
+
+        if (course!.Topics.Any(t => t.Id == topicId))
+        {
+            logger.LogError($"Course with id: '{courseId}' already has a topic with id: '{topicId}'.");
+
+            throw new BusinessException($"Course with id: '{courseId}' already has a topic with id: '{topicId}'.");
+        }
+
+        await repository.AddTopicAsync(courseId, topicId);
+
+        logger.LogInformation($"Topic with id: '{topicId}' successfully added to a course with id: '{courseId}'.");
+    }
 }
