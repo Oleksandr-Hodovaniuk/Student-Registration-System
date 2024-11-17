@@ -11,4 +11,5 @@ public interface ICourseService
     public Task UpdateAsync(UpdateCourseDTO t);
     public Task DeleteAsync(int id);
     public Task AddTopicAsync(int courseId, int topicId);
+    public Task RemoveTopicAsync(int courseId, int topicId);
 }

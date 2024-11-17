@@ -155,8 +155,8 @@ public class CoursesController : ControllerBase
         }
     }
 
-    [HttpPut("{courseId}/topics/{topicId}")]
-    public async Task<IActionResult> AddTopicAsync(int courseId, int topicId)
+    [HttpPut("add-topic/{courseId}")]
+    public async Task<IActionResult> AddTopicAsync(int courseId, [FromBody] int topicId)
     {
         try
         {
@@ -164,6 +164,30 @@ public class CoursesController : ControllerBase
             return NoContent();
         }
         catch (NotFoundException ex) 
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpPut("remove-topic/{courseId}")]
+    public async Task<IActionResult> RemoveTopicAsync(int courseId, [FromBody] int topicId)
+    {
+        try
+        {
+            await _service.RemoveTopicAsync(courseId, topicId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
         {
             return BadRequest(ex.Message);
         }
