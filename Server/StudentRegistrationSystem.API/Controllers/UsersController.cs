@@ -76,7 +76,7 @@ public class UsersController : ControllerBase
         try
         {
             await _service.CreateAsync(dto);
-            return Created();
+            return StatusCode(201, new { message = "User created succesfully." });
         }
         catch (BusinessException ex)
         {
