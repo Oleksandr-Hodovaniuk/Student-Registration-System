@@ -91,7 +91,7 @@ public class CoursesController : ControllerBase
         try
         {
             await _service.CreateAsync(course);
-            return Created();
+            return StatusCode(201, new { message = "Course created succesfully." });
         }
         catch (BusinessException ex)
         {
