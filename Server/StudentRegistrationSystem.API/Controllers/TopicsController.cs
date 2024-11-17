@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Services.Interfaces;
+using Application.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +12,17 @@ namespace StudentRegistrationSystem.API.Controllers;
 public class TopicsController : ControllerBase
 {
     private readonly ITopicService _service;
-    private readonly IValidator<TopicDTO> _validator;
+    private readonly IValidator<CreateTopicDTO> _createValidator;
+    private readonly IValidator<UpdateTopicDTO> _updateValidator;
     private readonly ILogger<TopicsController> _logger;
-    public TopicsController(ITopicService service, IValidator<TopicDTO> validator, ILogger<TopicsController> logger)
+    public TopicsController(ITopicService service,
+        IValidator<CreateTopicDTO> createValidator,
+        IValidator<UpdateTopicDTO> updateValidator,
+        ILogger<TopicsController> logger)
     {
         _service = service;
-        _validator = validator;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
         _logger = logger;
     }
 
@@ -43,19 +49,19 @@ public class TopicsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] TopicDTO topic)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateTopicDTO dto)
     {
-        var validationResult = await _validator.ValidateAsync(topic);
+        var validationResult = await _createValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning($"Topic: '{topic.Name}' failed validation.");
+            _logger.LogWarning($"Topic: '{dto.Name}' failed validation.");
 
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
         try
         {
-            await _service.CreateAsync(topic);
+            await _service.CreateAsync(dto);
 
             return StatusCode(201, new { message = "Topic created succesfully." });
         }
@@ -76,9 +82,9 @@ public class TopicsController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] TopicDTO topic)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateTopicDTO dto)
     {
-        var validationResult = await _validator.ValidateAsync(topic);
+        var validationResult = await _updateValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
@@ -86,7 +92,7 @@ public class TopicsController : ControllerBase
         }
         try
         {
-            await _service.UpdateAsync(topic);
+            await _service.UpdateAsync(dto);
 
             return NoContent();
         }
