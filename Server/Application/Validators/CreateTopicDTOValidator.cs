@@ -3,15 +3,13 @@ using FluentValidation;
 
 namespace Application.Validators;
 
-public class TopicDTOValidator : AbstractValidator<TopicDTO>
+public class CreateTopicDTOValidator : AbstractValidator<CreateTopicDTO>
 {
-    public TopicDTOValidator()
+    public CreateTopicDTOValidator()
     {
-        RuleFor(x => x.Id)
-            .GreaterThanOrEqualTo(0);
-
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Topic name is required.")
+            .Matches(@"^[a-zA-Z0-9._%+#-]+$").WithMessage("Name can only contain letters, numbers, and the following characters: . _ % + - #.")
             .Length(1, 25).WithMessage("Topic name must be between 1 and 25 characters.");
     }
 }

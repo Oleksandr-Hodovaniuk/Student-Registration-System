@@ -26,7 +26,7 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
         return mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
 
-    public async Task CreateAsync(TopicDTO dto)
+    public async Task CreateAsync(CreateTopicDTO dto)
     {
         if (await repository.ExistsByNameAsync(dto.Name))
         {
@@ -41,25 +41,36 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
         logger.LogInformation($"Topic: '{topic.Name}' successfully created.");
     }
 
-    public async Task UpdateAsync(TopicDTO dto)
+    public async Task UpdateAsync(UpdateTopicDTO dto)
     {
-        if (!await repository.ExistsByIdAsync(dto.Id))
+        var topic = await repository.GetByIdAsync(dto.Id);
+
+        if (topic == null)
         {
-            logger.LogError($"Topic with id: '{dto.Id}' doesn't exist.");
+            logger.LogWarning($"Topic with id: '{dto.Id}' doesn't exist.");
 
             throw new NotFoundException($"Topic with id: '{dto.Id}' doesn't exist.");
         }
-        if (await repository.ExistsByNameAsync(dto.Name))
-        {
-            logger.LogWarning($"Topic with name: '{dto.Name}' already exists.");
 
-            throw new BusinessException($"Topic with name '{dto.Name}' already exists.");
+        if (dto.Name != topic.Name && await repository.ExistsByNameAsync(dto.Name))
+        {
+            logger.LogWarning($"Name: '{dto.Name}' is already taken by another user.");
+
+            throw new BusinessException($"Name: '{dto.Name}' is already taken by another user.");
         }
 
-        var topic = mapper.Map<Topic>(dto);
-        await repository.UpdateAsync(topic);
+        if (topic.Name != dto.Name)
+        {
+            mapper.Map(dto, topic);
 
-        logger.LogInformation($"Topic with id: '{topic.Id}' successfully updated.");
+            await repository.UpdateAsync(topic);
+
+            logger.LogInformation($"Topic with id: '{topic.Id}' successfully updated.");
+        }
+        else
+        {
+            logger.LogInformation($"Topic with id: '{topic.Id}' has no data to update.");
+        }
     }
 
     public async Task DeleteAsync(int id)

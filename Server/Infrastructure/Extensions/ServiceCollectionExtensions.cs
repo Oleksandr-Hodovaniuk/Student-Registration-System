@@ -53,7 +53,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateUserDTO>, UpdateUserDTOValidator>();
         services.AddScoped<IValidator<CreateUserDTO>, CreateUserDTOValidator>();
         services.AddScoped<IValidator<CourseDTO>, CourseDTOValidator>();
-        services.AddScoped<IValidator<TopicDTO>, TopicDTOValidator>();
+        services.AddScoped<IValidator<UpdateTopicDTO>, UpdateTopicDTOValidator>();
+        services.AddScoped<IValidator<CreateTopicDTO>, CreateTopicDTOValidator>();
 
         //Registration of identity.
         services.AddIdentity<User, IdentityRole>()

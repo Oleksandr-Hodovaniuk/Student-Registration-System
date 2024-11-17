@@ -15,8 +15,10 @@ public class UsersController : ControllerBase
     private readonly IValidator<UpdateUserDTO> _updateValidator;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService service, IValidator<CreateUserDTO> createValidator,
-        IValidator<UpdateUserDTO> updateValidator, ILogger<UsersController> logger)
+    public UsersController(IUserService service,
+        IValidator<CreateUserDTO> createValidator,
+        IValidator<UpdateUserDTO> updateValidator,
+        ILogger<UsersController> logger)
     {
         _logger = logger;
         _createValidator = createValidator;

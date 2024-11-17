@@ -12,6 +12,11 @@ internal class TopicRepository(StudentRegistrationSystemDbContext context) : ITo
         return await context.Topics.OrderBy(t => t.Name).ToListAsync();
     }
 
+    public async Task<Topic?> GetByIdAsync(int id)
+    {
+        return await context.Topics.FindAsync(id);
+    }
+
     public async Task CreateAsync(Topic topic)
     {
         await context.Topics.AddAsync(topic);
