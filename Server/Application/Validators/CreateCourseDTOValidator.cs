@@ -3,13 +3,10 @@ using FluentValidation;
 
 namespace Application.Validators;
 
-public class CourseDTOValidator : AbstractValidator<CourseDTO>
+public class CreateCourseDTOValidator : AbstractValidator<CreateCourseDTO>
 {
-    public CourseDTOValidator()
+    public CreateCourseDTOValidator()
     {
-        RuleFor(x => x.Id)
-            .GreaterThanOrEqualTo(0);
-
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
             .Length(1, 60).WithMessage("Name must be between 1 and 60 characters.");
