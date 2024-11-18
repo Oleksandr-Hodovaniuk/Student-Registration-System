@@ -9,7 +9,10 @@ public interface IUserRepository
     public Task CreateAsync(User user);
     public Task UpdateAsync(User user);
     public Task DeleteAsync(string id);
+    public Task AddCourseAsync(string userId, int courseId);
+    public Task RemoveCourseAsync(string userId, int courseId);
     public Task<bool> ExistsByEmailAsync(string email);
     public Task<bool> ExistsByIdAsync(string id);
+    public Task<bool> CourseExistsByIdAsync(int id);
 
 }

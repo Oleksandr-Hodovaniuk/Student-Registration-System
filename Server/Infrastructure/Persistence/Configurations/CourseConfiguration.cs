@@ -13,10 +13,20 @@ internal class CourseConfiguration : IEntityTypeConfiguration<Course>
         builder.HasMany(c => c.Topics)
             .WithMany(t => t.Courses)
             .UsingEntity<Dictionary<string, object>>(   //Configuring a junction table.
-                "CourseTopic",
-                j => j.HasOne<Topic>().WithMany().HasForeignKey("TopicId"),
-                j => j.HasOne<Course>().WithMany().HasForeignKey("CourseId"),
+                "CourseTopics",
+                j => j.HasOne<Topic>()
+                    .WithMany()
+                    .HasForeignKey("TopicId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Course>()
+                    .WithMany()
+                    .HasForeignKey("CourseId")
+                    .OnDelete(DeleteBehavior.Cascade),
                 j => j.HasKey("CourseId", "TopicId")
             );
+
+        builder.HasMany(c => c.UserCourses)
+            .WithOne(uc => uc.Course)
+            .HasForeignKey(uc => uc.CourseId);
     }
 }

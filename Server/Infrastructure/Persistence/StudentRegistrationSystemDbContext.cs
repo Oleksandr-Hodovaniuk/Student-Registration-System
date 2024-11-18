@@ -9,7 +9,7 @@ namespace Infrastructure.Persistence;
 public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistrationSystemDbContext> options) 
     :IdentityDbContext<User>(options)
 {
-    internal DbSet<UserCourse> UserCourses { get; set; }
+    internal DbSet<UserCourses> UserCourses { get; set; }
     internal DbSet<Course> Courses { get; set; }
     internal DbSet<Topic> Topics { get; set; }
 
@@ -20,6 +20,7 @@ public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistra
         //Configuring entities.
         modelBuilder.ApplyConfiguration(new TopicConfiguration());
         modelBuilder.ApplyConfiguration(new CourseConfiguration());
+        modelBuilder.ApplyConfiguration(new UserCoursesConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
     }
 }

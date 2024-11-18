@@ -1,7 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Services.Interfaces;
-using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +14,8 @@ public class UsersController : ControllerBase
     private readonly IValidator<UpdateUserDTO> _updateValidator;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserService service,
+    public UsersController(
+        IUserService service,
         IValidator<CreateUserDTO> createValidator,
         IValidator<UpdateUserDTO> updateValidator,
         ILogger<UsersController> logger)
@@ -131,6 +131,54 @@ public class UsersController : ControllerBase
             return NoContent();
         }
         catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpPut("add-course/{userId}")]
+    public async Task<IActionResult> AddCourseAsync(string userId, [FromBody] int courseId)
+    {
+        try
+        {
+            await _service.AddCourseAsync(userId, courseId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+
+            return StatusCode(500, "Internal server error.");
+        }
+    }
+
+    [HttpPut("remove-course/{userId}")]
+    public async Task<IActionResult> RemoveCourseAsync(string userId, [FromBody] int courseId)
+    {
+        try
+        {
+            await _service.RemoveCourseAsync(userId, courseId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (BusinessException ex)
         {
             return BadRequest(ex.Message);
         }

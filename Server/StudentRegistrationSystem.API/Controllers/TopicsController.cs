@@ -15,7 +15,8 @@ public class TopicsController : ControllerBase
     private readonly IValidator<CreateTopicDTO> _createValidator;
     private readonly IValidator<UpdateTopicDTO> _updateValidator;
     private readonly ILogger<TopicsController> _logger;
-    public TopicsController(ITopicService service,
+    public TopicsController(
+        ITopicService service,
         IValidator<CreateTopicDTO> createValidator,
         IValidator<UpdateTopicDTO> updateValidator,
         ILogger<TopicsController> logger)

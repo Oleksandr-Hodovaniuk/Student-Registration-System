@@ -10,4 +10,6 @@ public interface IUserService
     public Task CreateAsync(CreateUserDTO dto);
     public Task UpdateAsync(UpdateUserDTO dto);
     public Task DeleteAsync(string id);
+    public Task AddCourseAsync(string userId, int courseId);
+    public Task RemoveCourseAsync(string userId, int courseId);
 }

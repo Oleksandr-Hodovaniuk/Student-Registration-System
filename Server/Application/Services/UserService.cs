@@ -101,4 +101,64 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
 
         logger.LogInformation($"User with id: '{id}' successfully deleted.");
     }
+
+    public async Task AddCourseAsync(string userId, int courseId)
+    {
+        if (!await repository.ExistsByIdAsync(userId))
+        {
+            logger.LogError($"User with id: '{userId}' doesn't exist.");
+
+            throw new NotFoundException($"User with id: '{userId}' doesn't exist.");
+        }
+
+        if (!await repository.CourseExistsByIdAsync(courseId))
+        {
+            logger.LogError($"Course with id: '{userId}' doesn't exist.");
+
+            throw new NotFoundException($"Course with id: '{userId}' doesn't exist.");
+        }
+
+        var user = await repository.GetByIdAsync(userId);
+
+        if (user!.UserCourses.Any(uc => uc.CourseId == courseId))
+        {
+            logger.LogError($"User with id: '{userId}' already has a course with id: '{courseId}'.");
+
+            throw new BusinessException($"User with id: '{userId}' already has a course with id: '{courseId}'.");
+        }
+
+        await repository.AddCourseAsync(userId, courseId);
+
+        logger.LogInformation($"Course with id: '{courseId}' successfully added to a user with id: '{userId}'.");
+    }
+
+    public async Task RemoveCourseAsync(string userId, int courseId)
+    {
+        if (!await repository.ExistsByIdAsync(userId))
+        {
+            logger.LogError($"User with id: '{userId}' doesn't exist.");
+
+            throw new NotFoundException($"User with id: '{userId}' doesn't exist.");
+        }
+
+        if (await repository.CourseExistsByIdAsync(courseId))
+        {
+            logger.LogError($"Course with id: '{userId}' doesn't exist.");
+
+            throw new NotFoundException($"Course with id: '{userId}' doesn't exist.");
+        }
+
+        var user = await repository.GetByIdAsync(userId);
+
+        if (!user!.UserCourses.Any(uc => uc.CourseId == courseId))
+        {
+            logger.LogError($"User with id: '{userId}' doesn't have a course with id: '{courseId}'.");
+
+            throw new BusinessException($"User with id: '{userId}' doesn't have a course with id: '{courseId}'.");
+        }
+
+        await repository.AddCourseAsync(userId, courseId);
+
+        logger.LogInformation($"Course with id: '{courseId}' successfully remowed to a user with id: '{userId}'.");
+    }
 }

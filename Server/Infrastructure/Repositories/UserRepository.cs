@@ -46,6 +46,30 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
         await context.SaveChangesAsync();
     }
 
+    public async Task AddCourseAsync(string userId, int courseId)
+    {
+        var course = await context.Courses.FindAsync(courseId);
+        var user = await context.Users.FindAsync(userId);
+        user?.UserCourses.Add(new UserCourses
+        {
+            UserId = userId,
+            CourseId = courseId,
+            RegistrationDate = DateTime.Now
+        });
+
+        await context.SaveChangesAsync();
+    }
+
+    public async Task RemoveCourseAsync(string userId, int courseId)
+    {
+        var userCourse =  await context.UserCourses
+            .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.CourseId == courseId);
+        var user = await context.Users.FindAsync(userId);
+
+        user?.UserCourses.Remove(userCourse!);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<bool> ExistsByEmailAsync(string email)
     {
         return await context.Users.AnyAsync(u => u.Email == email);
@@ -54,5 +78,10 @@ internal class UserRepository(StudentRegistrationSystemDbContext context) : IUse
     public async Task<bool> ExistsByIdAsync(string id)
     {
         return await context.Users.AnyAsync(u => u.Id == id);
+    }
+
+    public async Task<bool> CourseExistsByIdAsync(int id)
+    {
+        return await context.Courses.AnyAsync(t => t.Id == id);
     }
 }
