@@ -1,9 +1,7 @@
-﻿using Application.DTOs;
-using Application.Repositories;
+﻿using Application.Repositories;
 using Core.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Infrastructure.Repositories;
 
