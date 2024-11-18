@@ -7,36 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace StudentRegistrationSystem.API.Controllers;
 [Route("api/users")]
 [ApiController]
-public class UsersController : ControllerBase
+public class UsersController(
+    IUserService service,
+    IValidator<CreateUserDTO> createValidator,
+    IValidator<UpdateUserDTO> updateValidator,
+    ILogger<UsersController> logger) : ControllerBase
 {
-    private readonly IUserService _service;
-    private readonly IValidator<CreateUserDTO> _createValidator;
-    private readonly IValidator<UpdateUserDTO> _updateValidator;
-    private readonly ILogger<UsersController> _logger;
-
-    public UsersController(
-        IUserService service,
-        IValidator<CreateUserDTO> createValidator,
-        IValidator<UpdateUserDTO> updateValidator,
-        ILogger<UsersController> logger)
-    {
-        _logger = logger;
-        _createValidator = createValidator;
-        _updateValidator = updateValidator;
-        _service = service;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
         try
         {
-            var users = await _service.GetAllAsync();
+            var users = await service.GetAllAsync();
             return Ok(users);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
+            logger.LogError(ex, "An unexpected error occurred while getting courses.");
 
             return StatusCode(500, "Internal server error.");
         }
@@ -47,7 +34,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var user = await _service.GetByIdAsync(id);
+            var user = await service.GetByIdAsync(id);
             return Ok(user);
         }
         catch (NotFoundException ex)
@@ -56,26 +43,26 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while getting courses.");
+            logger.LogError(ex, "An unexpected error occurred while getting courses.");
 
             return StatusCode(500, "Internal server error.");
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(CreateUserDTO dto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateUserDTO dto)
     {
-        var validationResult = await _createValidator.ValidateAsync(dto);
+        var validationResult = await createValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning($"User: '{dto.Name} {dto.LastName}' failed validation.");
+            logger.LogWarning($"User: '{dto.Name} {dto.LastName}' failed validation.");
 
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
         try
         {
-            await _service.CreateAsync(dto);
+            await service.CreateAsync(dto);
             return StatusCode(201, new { message = "User created succesfully." });
         }
         catch (BusinessException ex)
@@ -84,26 +71,26 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while creating course.");
+            logger.LogError(ex, "An unexpected error occurred while creating course.");
 
             return StatusCode(500, "Internal server error.");
         }
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync(UpdateUserDTO dto)
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserDTO dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
+        var validationResult = await updateValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
-            _logger.LogWarning($"User: '{dto.Name} {dto.LastName}' failed validation.");
+            logger.LogWarning($"User: '{dto.Name} {dto.LastName}' failed validation.");
 
             return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
         }
         try
         {
-            await _service.UpdateAsync(dto);
+            await service.UpdateAsync(dto);
             return Created();
         }
         catch (NotFoundException ex)
@@ -116,7 +103,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while creating course.");
+            logger.LogError(ex, "An unexpected error occurred while creating course.");
 
             return StatusCode(500, ex.Message);
         }
@@ -127,7 +114,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            await _service.DeleteAsync(id);
+            await service.DeleteAsync(id);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -136,18 +123,18 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+            logger.LogError(ex, "An unexpected error occurred while deleting course.");
 
             return StatusCode(500, "Internal server error.");
         }
     }
 
-    [HttpPut("add-course/{userId}")]
+    [HttpPut("{userId}/courses/{courseId}")]
     public async Task<IActionResult> AddCourseAsync(string userId, [FromBody] int courseId)
     {
         try
         {
-            await _service.AddCourseAsync(userId, courseId);
+            await service.AddCourseAsync(userId, courseId);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -160,18 +147,18 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+            logger.LogError(ex, "An unexpected error occurred while deleting course.");
 
             return StatusCode(500, "Internal server error.");
         }
     }
 
-    [HttpPut("remove-course/{userId}")]
-    public async Task<IActionResult> RemoveCourseAsync(string userId, [FromBody] int courseId)
+    [HttpDelete("{userId}/courses/{courseId}")]
+    public async Task<IActionResult> RemoveCourseAsync(string userId, int courseId)
     {
         try
         {
-            await _service.RemoveCourseAsync(userId, courseId);
+            await service.RemoveCourseAsync(userId, courseId);
             return NoContent();
         }
         catch (NotFoundException ex)
@@ -184,7 +171,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while deleting course.");
+            logger.LogError(ex, "An unexpected error occurred while deleting course.");
 
             return StatusCode(500, "Internal server error.");
         }

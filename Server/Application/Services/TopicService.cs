@@ -16,7 +16,7 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
 
         if (!topics.Any())
         {
-            logger.LogWarning("Topics don't exist.");
+            logger.LogWarning("Topics do not exist.");
 
             return Enumerable.Empty<TopicDTO>();
         }
@@ -47,9 +47,9 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
 
         if (topic == null)
         {
-            logger.LogWarning($"Topic with id: '{dto.Id}' doesn't exist.");
+            logger.LogWarning($"Topic with id: '{dto.Id}' does not exist.");
 
-            throw new NotFoundException($"Topic with id: '{dto.Id}' doesn't exist.");
+            throw new NotFoundException($"Topic with id: '{dto.Id}' does not exist.");
         }
 
         if (dto.Name != topic.Name && await repository.ExistsByNameAsync(dto.Name))
@@ -77,9 +77,9 @@ public class TopicService(ITopicRepository repository, IMapper mapper, ILogger<T
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Topic with id: '{id}' doesn't exist.");
+            logger.LogError($"Topic with id: '{id}' does not exist.");
 
-            throw new NotFoundException($"Topic with id: '{id}' doesn't exist.");
+            throw new NotFoundException($"Topic with id: '{id}' does not exist.");
         }
         
         await repository.DeleteAsync(id);

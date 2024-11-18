@@ -148,11 +148,8 @@ internal class CourseRepository(StudentRegistrationSystemDbContext context) : IC
     /// A TopicDTO collection value: TopicDTO collection if all topics exist that have transmitted identifiers;
     /// otherwise, empty TopicDTO collection.
     /// </returns>
-    public async Task<List<Topic>> TopicsExistsByIdsAsync(IEnumerable<TopicDTO> topics)
+    public async Task<List<Topic>> TopicsExistByIdsAsync(List<int> topicsIds)
     {
-        //Gets all ids from topics.
-        var topicsIds = topics.Select(t => t.Id).ToList();
-
         //Gets all topics from a database that contains transmitted ids.
         var existingTopics = await context.Topics   
         .Where(t => topicsIds.Contains(t.Id))
