@@ -47,7 +47,7 @@ public class CoursesController : ControllerBase
     {
         try
         {
-            var courses = await _service.GetAllByTopicsAsync(topicsIds);
+            var courses = await _service.GetAllByTopicsIdsAsync(topicsIds);
             return Ok(courses);
         }
         catch (Exception ex)
