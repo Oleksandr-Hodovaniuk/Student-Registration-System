@@ -4,7 +4,6 @@ using Application.Repositories;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Core.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
@@ -17,7 +16,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
 
         if (!courses.Any())
         {
-            logger.LogWarning("Courses don't exist.");
+            logger.LogWarning("Courses do not exist.");
 
             return Enumerable.Empty<CourseDTO>();
         }
@@ -33,7 +32,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
 
         if (!courses.Any())
         {
-            logger.LogWarning("Courses with these topics don't exist.");
+            logger.LogWarning("Courses with these topics do not exist.");
 
             return Enumerable.Empty<CourseDTO>();
         }
@@ -47,9 +46,9 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Course with id: '{id}' doesn't exist.");
+            logger.LogError($"Course with id: '{id}' does not exist.");
 
-            throw new NotFoundException($"Course with id '{id}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{id}' does not exist.");
         }
 
         var course = await repository.GetByIdAsync(id);
@@ -59,7 +58,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         return mapper.Map<CourseDTO>(course);
     }
 
-    public async Task CreateAsync([FromBody] CreateCourseDTO dto)
+    public async Task CreateAsync(CreateCourseDTO dto)
     {
         if (await repository.ExistsByNameAsync(dto.Name))
         {
@@ -68,13 +67,13 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
             throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
-        var topics = await repository.TopicsExistsByIdsAsync(dto.Topics!);
+        var topics = await repository.TopicsExistByIdsAsync(dto.Topics);
 
         if (!topics.Any())
         {
-            logger.LogError($"These topics don't exist.");
+            logger.LogError($"One or more topics do not exist.");
 
-            throw new NotFoundException($"These topics don't exist.");
+            throw new NotFoundException($"One or more topics do not exist.");
         }
         
         var course = mapper.Map<Course>(dto);
@@ -85,13 +84,13 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         logger.LogInformation($"Course: '{course.Name}' successfully created.");
     }
 
-    public async Task UpdateAsync([FromBody] UpdateCourseDTO dto)
+    public async Task UpdateAsync(UpdateCourseDTO dto)
     {
         if (!await repository.ExistsByIdAsync(dto.Id))
         {
-            logger.LogError($"Course with id: '{dto.Id}' doesn't exist.");
+            logger.LogError($"Course with id: '{dto.Id}' does not exist.");
 
-            throw new NotFoundException($"Course with id '{dto.Id}' doesn't exist.");     
+            throw new NotFoundException($"Course with id '{dto.Id}' does not exist.");     
         }
 
         var course = mapper.Map<Course>(dto);
@@ -104,9 +103,9 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogError($"Course with id: '{id}' doesn't exist.");
+            logger.LogError($"Course with id: '{id}' does not exist.");
 
-            throw new NotFoundException($"Course with id '{id}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{id}' does not exist.");
         }
 
         await repository.DeleteAsync(id);
@@ -118,16 +117,16 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(courseId))
         {
-            logger.LogError($"Course with id: '{courseId}' doesn't exist.");
+            logger.LogError($"Course with id: '{courseId}' does not exist.");
 
-            throw new NotFoundException($"Course with id '{courseId}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{courseId}' does not exist.");
         }
 
         if (!await repository.TopicExistsByIdAsync(topicId))
         {
-            logger.LogError($"Topic with id: '{topicId}' doesn't exist.");
+            logger.LogError($"Topic with id: '{topicId}' does not exist.");
 
-            throw new NotFoundException($"Topic with id '{topicId}' doesn't exist.");
+            throw new NotFoundException($"Topic with id '{topicId}' does not exist.");
         }
 
         var course = await repository.GetByIdAsync(courseId);
@@ -148,25 +147,25 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
     {
         if (!await repository.ExistsByIdAsync(courseId))
         {
-            logger.LogError($"Course with id: '{courseId}' doesn't exist.");
+            logger.LogError($"Course with id: '{courseId}' does not exist.");
 
-            throw new NotFoundException($"Course with id '{courseId}' doesn't exist.");
+            throw new NotFoundException($"Course with id '{courseId}' does not exist.");
         }
 
         if (!await repository.TopicExistsByIdAsync(topicId))
         {
-            logger.LogError($"Topic with id: '{topicId}' doesn't exist.");
+            logger.LogError($"Topic with id: '{topicId}' does not exist.");
 
-            throw new NotFoundException($"Topic with id '{topicId}' doesn't exist.");
+            throw new NotFoundException($"Topic with id '{topicId}' does not exist.");
         }
 
         var course = await repository.GetByIdAsync(courseId);
 
         if (!course!.Topics.Any(t => t.Id == topicId))
         {
-            logger.LogError($"Course with id: '{courseId}' doesn't have a topic with id: '{topicId}'.");
+            logger.LogError($"Course with id: '{courseId}' does not have a topic with id: '{topicId}'.");
 
-            throw new BusinessException($"Course with id: '{courseId}' doesn't have a topic with id: '{topicId}'.");
+            throw new BusinessException($"Course with id: '{courseId}' does not have a topic with id: '{topicId}'.");
         }
 
         await repository.RemoveTopicAsync(courseId, topicId);

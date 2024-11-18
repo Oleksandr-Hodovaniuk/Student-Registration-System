@@ -15,6 +15,6 @@ public interface ICourseRepository
     public Task RemoveTopicAsync(int courseId, int topicId);
     public Task<bool> ExistsByIdAsync(int id);
     public Task<bool> ExistsByNameAsync(string name);
-    public Task<List<Topic>> TopicsExistsByIdsAsync(IEnumerable<TopicDTO> topics);
+    public Task<List<Topic>> TopicsExistByIdsAsync(List<int> topics);
     public Task<bool> TopicExistsByIdAsync(int id);
 }

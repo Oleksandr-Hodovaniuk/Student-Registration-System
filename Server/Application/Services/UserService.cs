@@ -16,7 +16,7 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
 
         if (!users.Any())
         {
-            logger.LogWarning("Users don't exist.");
+            logger.LogWarning("Users do not exist.");
 
             return Enumerable.Empty<UserCoursesDTO>();
         }
@@ -29,9 +29,9 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
     {
         if(!await repository.ExistsByIdAsync(id))
         {
-            logger.LogWarning($"User with id: '{id}' doesn't exist.");
+            logger.LogWarning($"User with id: '{id}' does not exist.");
 
-            throw new NotFoundException($"User with id: '{id}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{id}' does not exist.");
         }
 
         var user = await repository.GetByIdAsync(id);
@@ -62,9 +62,9 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
 
         if (user == null)
         {
-            logger.LogWarning($"User with id: '{dto.Id}' doesn't exist.");
+            logger.LogWarning($"User with id: '{dto.Id}' does not exist.");
 
-            throw new NotFoundException($"User with id: '{dto.Id}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{dto.Id}' does not exist.");
         }
 
         if (user.Email != dto.Email && await repository.ExistsByEmailAsync(dto.Email!))
@@ -92,9 +92,9 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
     {
         if (!await repository.ExistsByIdAsync(id))
         {
-            logger.LogWarning($"User with id: '{id}' doesn't exist.");
+            logger.LogWarning($"User with id: '{id}' does not exist.");
 
-            throw new NotFoundException($"User with id: '{id}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{id}' does not exist.");
         }
 
         await repository.DeleteAsync(id);
@@ -106,16 +106,16 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
     {
         if (!await repository.ExistsByIdAsync(userId))
         {
-            logger.LogError($"User with id: '{userId}' doesn't exist.");
+            logger.LogError($"User with id: '{userId}' does not exist.");
 
-            throw new NotFoundException($"User with id: '{userId}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{userId}' does not exist.");
         }
 
         if (!await repository.CourseExistsByIdAsync(courseId))
         {
-            logger.LogError($"Course with id: '{userId}' doesn't exist.");
+            logger.LogError($"Course with id: '{userId}' does not exist.");
 
-            throw new NotFoundException($"Course with id: '{userId}' doesn't exist.");
+            throw new NotFoundException($"Course with id: '{userId}' does not exist.");
         }
 
         var user = await repository.GetByIdAsync(userId);
@@ -136,25 +136,25 @@ public class UserService(IUserRepository repository, IMapper mapper, ILogger<Cou
     {
         if (!await repository.ExistsByIdAsync(userId))
         {
-            logger.LogError($"User with id: '{userId}' doesn't exist.");
+            logger.LogError($"User with id: '{userId}' does not exist.");
 
-            throw new NotFoundException($"User with id: '{userId}' doesn't exist.");
+            throw new NotFoundException($"User with id: '{userId}' does not exist.");
         }
 
         if (await repository.CourseExistsByIdAsync(courseId))
         {
-            logger.LogError($"Course with id: '{userId}' doesn't exist.");
+            logger.LogError($"Course with id: '{userId}' does not exist.");
 
-            throw new NotFoundException($"Course with id: '{userId}' doesn't exist.");
+            throw new NotFoundException($"Course with id: '{userId}' does not exist.");
         }
 
         var user = await repository.GetByIdAsync(userId);
 
         if (!user!.UserCourses.Any(uc => uc.CourseId == courseId))
         {
-            logger.LogError($"User with id: '{userId}' doesn't have a course with id: '{courseId}'.");
+            logger.LogError($"User with id: '{userId}' does not have a course with id: '{courseId}'.");
 
-            throw new BusinessException($"User with id: '{userId}' doesn't have a course with id: '{courseId}'.");
+            throw new BusinessException($"User with id: '{userId}' does not have a course with id: '{courseId}'.");
         }
 
         await repository.AddCourseAsync(userId, courseId);
