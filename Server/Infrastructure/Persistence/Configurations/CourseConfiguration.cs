@@ -12,7 +12,7 @@ internal class CourseConfiguration : IEntityTypeConfiguration<Course>
 
         builder.HasMany(c => c.Topics)
             .WithMany(t => t.Courses)
-            .UsingEntity<Dictionary<string, object>>(   //Configuring a junction table.
+            .UsingEntity<Dictionary<string, object>>(   
                 "CourseTopics",
                 j => j.HasOne<Topic>()
                     .WithMany()
