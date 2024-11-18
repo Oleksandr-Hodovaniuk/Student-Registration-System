@@ -11,12 +11,6 @@ internal class TopicConfiguration : IEntityTypeConfiguration<Topic>
         builder.HasKey(t => t.Id);
 
         builder.HasMany(t => t.Courses)
-            .WithMany(c => c.Topics)
-            .UsingEntity<Dictionary<string, object>>(   //Configuring a junction table.
-                "CourseTopic",
-                j => j.HasOne<Course>().WithMany().HasForeignKey("CourseId"),
-                j => j.HasOne<Topic>().WithMany().HasForeignKey("TopicId"),
-                j => j.HasKey("CourseId", "TopicId")
-            );
+            .WithMany(c => c.Topics);
     }
 }

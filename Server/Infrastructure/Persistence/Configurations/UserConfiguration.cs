@@ -10,16 +10,8 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
 
-        builder.HasMany(u => u.Courses)
-            .WithMany(c => c.Users)
-            .UsingEntity<UserCourse>(   //Configuring a junction table.
-                j => j.HasOne(uc => uc.Course)
-                      .WithMany(c => c.UserCourses)
-                      .HasForeignKey(uc => uc.CourseId),
-                j => j.HasOne(uc => uc.User)
-                      .WithMany(u => u.UserCourses)
-                      .HasForeignKey(uc => uc.UserId),
-                j => j.HasKey(uc => new { uc.UserId, uc.CourseId })
-            );
+        builder.HasMany(u => u.UserCourses) 
+        .WithOne(uc => uc.User)
+        .HasForeignKey(uc => uc.UserId);
     }
 }

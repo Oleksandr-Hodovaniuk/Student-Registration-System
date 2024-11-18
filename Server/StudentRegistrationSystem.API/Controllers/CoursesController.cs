@@ -14,7 +14,8 @@ public class CoursesController : ControllerBase
     private readonly IValidator<UpdateCourseDTO> _updateValidator;
     private readonly ILogger<CoursesController> _logger;
 
-    public CoursesController(ICourseService service,
+    public CoursesController(
+        ICourseService service,
         IValidator<CreateCourseDTO> createValidator,
         IValidator<UpdateCourseDTO> updateValidator,
         ILogger<CoursesController> logger)

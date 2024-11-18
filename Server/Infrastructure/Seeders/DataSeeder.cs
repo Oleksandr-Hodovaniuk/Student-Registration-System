@@ -28,24 +28,17 @@ internal class DataSeeder(StudentRegistrationSystemDbContext context) : ISeeder
 
                 var users = GetUsers();
 
-                users[0].Courses.Add(courses[0]);
-                users[0].Courses.Add(courses[1]);
-                users[1].Courses.Add(courses[1]);
-                users[2].Courses.Add(courses[2]);
-                users[3].Courses.Add(courses[3]);
-                users[4].Courses.Add(courses[4]);
-
                 await context.Users.AddRangeAsync(users);
                 await context.SaveChangesAsync();
 
-                var userCourses = new List<UserCourse>();
+                var userCourses = new List<UserCourses>();
 
-                userCourses.Add(new UserCourse { UserId = users[0].Id, CourseId = courses[0].Id, RegistrationDate = DateTime.Now });
-                userCourses.Add(new UserCourse { UserId = users[0].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
-                userCourses.Add(new UserCourse { UserId = users[1].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
-                userCourses.Add(new UserCourse { UserId = users[2].Id, CourseId = courses[2].Id, RegistrationDate = DateTime.Now });
-                userCourses.Add(new UserCourse { UserId = users[3].Id, CourseId = courses[3].Id, RegistrationDate = DateTime.Now });
-                userCourses.Add(new UserCourse { UserId = users[4].Id, CourseId = courses[4].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[0].Id, CourseId = courses[0].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[0].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[1].Id, CourseId = courses[1].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[2].Id, CourseId = courses[2].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[3].Id, CourseId = courses[3].Id, RegistrationDate = DateTime.Now });
+                userCourses.Add(new UserCourses { UserId = users[4].Id, CourseId = courses[4].Id, RegistrationDate = DateTime.Now });
 
                 await context.UserCourses.AddRangeAsync(userCourses);
                 await context.SaveChangesAsync();
