@@ -27,9 +27,9 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
         return mapper.Map<IEnumerable<CourseDTO>>(courses);
     }
 
-    public async Task<IEnumerable<CourseDTO>> GetAllByTopicsAsync( params int[] topicsIds)
+    public async Task<IEnumerable<CourseDTO>> GetAllByTopicsIdsAsync( params int[] topicsIds)
     {
-        var courses = await repository.GetAllByIdAsync(topicsIds);
+        var courses = await repository.GetAllByTopicsIdsAsync(topicsIds);
 
         if (!courses.Any())
         {
@@ -68,7 +68,7 @@ public class CourseService(ICourseRepository repository, IMapper mapper, ILogger
             throw new BusinessException($"Course with name '{dto.Name}' already exists.");
         }
 
-        var topics = await repository.TopicsExistsAsync(dto.Topics!);
+        var topics = await repository.TopicsExistsByIdsAsync(dto.Topics!);
 
         if (!topics.Any())
         {

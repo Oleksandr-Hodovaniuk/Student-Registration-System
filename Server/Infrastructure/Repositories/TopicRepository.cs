@@ -20,7 +20,7 @@ internal class TopicRepository(StudentRegistrationSystemDbContext context) : ITo
     /// Returns a topic by its identifier.
     /// </summary>
     /// <param name="id">The identifier of the topic entity.</param>
-    /// <returns>The topic entity.</returns>
+    /// <returns>A topic entity.</returns>
     public async Task<Topic?> GetByIdAsync(int id)
     {
         return await context.Topics.FindAsync(id);
@@ -38,7 +38,7 @@ internal class TopicRepository(StudentRegistrationSystemDbContext context) : ITo
     }
 
     /// <summary>
-    /// Updates an existing entity in a database.
+    /// Updates an existing topic entity in a database.
     /// </summary>
     /// <param name="topic">The topic entity that is updated in a database.</param>
     /// <returns></returns>

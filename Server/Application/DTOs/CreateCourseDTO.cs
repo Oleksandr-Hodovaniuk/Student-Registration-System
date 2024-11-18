@@ -8,5 +8,5 @@ public class CreateCourseDTO
     public DateTime СreationDate { get; set; } = default!;
     public DateTime Beginning { get; set; } = default!;
     public short Duration { get; set; }
-    public List<UpdateTopicDTO>? Topics { get; set; } = new();
+    public List<TopicDTO>  Topics { get; set; } = new();
 }
