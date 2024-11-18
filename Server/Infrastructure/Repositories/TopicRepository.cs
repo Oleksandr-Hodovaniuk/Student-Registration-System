@@ -7,7 +7,6 @@ namespace Infrastructure.Repositories;
 
 internal class TopicRepository(StudentRegistrationSystemDbContext context) : ITopicRepository
 {
-
     /// <summary>
     /// Returns all topics from a database.
     /// </summary>
