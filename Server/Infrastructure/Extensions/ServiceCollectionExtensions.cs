@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Persistence;
+using Infrastructure.Persistence.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,5 +13,8 @@ public static class ServiceCollectionExtensions
         // Connection to a database.
         var connectionString = configuration.GetConnectionString("StudentRegistrationSystemDb");
         services.AddDbContext<StudentRegistrationSystemDbContext>(options => options.UseSqlServer(connectionString));
+
+        // Registration of DataSeeder.
+        services.AddTransient<DefaultDataSeeder>();
     }
 }

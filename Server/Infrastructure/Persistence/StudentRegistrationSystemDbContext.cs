@@ -13,7 +13,7 @@ public class StudentRegistrationSystemDbContext(DbContextOptions<StudentRegistra
     {
         base.OnModelCreating(modelBuilder);
 
-        //Configuration of entities.
+        // Configuration of entities.
         modelBuilder.ApplyConfiguration(new CourseConfiguration());
     }
 }
