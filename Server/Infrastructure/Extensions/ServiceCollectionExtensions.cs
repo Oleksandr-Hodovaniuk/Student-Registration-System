@@ -1,5 +1,7 @@
-﻿using Infrastructure.Persistence;
+﻿using Application.Interfaces.Repositories;
+using Infrastructure.Persistence;
 using Infrastructure.Persistence.Seeders;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,5 +18,8 @@ public static class ServiceCollectionExtensions
 
         // Registration of DataSeeder.
         services.AddTransient<DefaultDataSeeder>();
+
+        // Registration of repositories.
+        services.AddScoped<ITopicRepository, TopicRepository>();
     }
 }
