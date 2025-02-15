@@ -3,58 +3,57 @@ using Core.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Repositories;
+
+internal class TopicRepository(StudentRegistrationSystemDbContext dbContext) : ITopicRepository
 {
-    internal class TopicRepository(StudentRegistrationSystemDbContext dbContext) : ITopicRepository
+    public async Task<Topic> CreateAsync(Topic entity)
     {
-        public async Task<Topic> CreateAsync(Topic entity)
+        await dbContext.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
+
+        return entity;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var topic = await dbContext.Topcis.FindAsync(id);
+        if (topic != null)
         {
-            await dbContext.AddAsync(entity);
+            dbContext.Topcis.Remove(topic);
             await dbContext.SaveChangesAsync();
 
-            return entity;
+            return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            var topic = await dbContext.Topcis.FindAsync(id);
-            if (topic != null)
-            {
-                dbContext.Topcis.Remove(topic);
-                await dbContext.SaveChangesAsync();
+        return false;
+    }
 
-                return true;
-            }
+    public async Task<IEnumerable<Topic>> GetAllAsync()
+    {
+        return await dbContext.Topcis.ToListAsync();
+    }
 
-            return false;
-        }
+    public async Task<Topic?> GetByIdAsync(Guid id)
+    {
+        return await dbContext.Topcis.FindAsync(id);
+    }
 
-        public async Task<IEnumerable<Topic>> GetAllAsync()
-        {
-            return await dbContext.Topcis.ToListAsync();
-        }
+    public async Task<Topic> UpdateAsync(Topic entity)
+    {
+        dbContext.Update(entity);
+        await dbContext.SaveChangesAsync();
 
-        public async Task<Topic?> GetByIdAsync(Guid id)
-        {
-            return await dbContext.Topcis.FindAsync(id);
-        }
+        return entity;
+    }
 
-        public async Task<Topic> UpdateAsync(Topic entity)
-        {
-            dbContext.Update(entity);
-            await dbContext.SaveChangesAsync();
+    public async Task<bool> ExistsByIdAsync(Guid id)
+    {
+        return await dbContext.Topcis.AnyAsync(x => x.Id == id);
+    }
 
-            return entity;
-        }
-
-        public async Task<bool> ExistsByIdAsync(Guid id)
-        {
-            return await dbContext.Topcis.AnyAsync(x => x.Id == id);
-        }
-
-        public async Task<bool> ExistsByStringAsync(string str)
-        {
-            return await dbContext.Topcis.AnyAsync(x => x.Name == str);
-        }
+    public async Task<bool> ExistsByStringAsync(string str)
+    {
+        return await dbContext.Topcis.AnyAsync(x => x.Name == str);
     }
 }
