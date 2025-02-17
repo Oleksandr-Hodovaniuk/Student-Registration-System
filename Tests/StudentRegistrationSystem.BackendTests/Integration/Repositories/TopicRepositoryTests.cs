@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace StudentRegistrationSystem.BackendTests.Integration.Repositories;
 
 [TestFixture]
-public class TopicRepositoriesTests
+public class TopicRepositoryTests
 {
     private StudentRegistrationSystemDbContext dbContext;
     private TopicRepository repository;

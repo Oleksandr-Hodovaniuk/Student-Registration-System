@@ -7,7 +7,7 @@ public interface IGenericService<T, C, U>
 {
     Task<T> GetByIdAsync(Guid id);
     Task<IEnumerable<T>> GetAllAsync();
-    Task<T> CreateAsync(C entity);
-    Task<T> UpdateAsync(Guid id, U entity);
+    Task<T> CreateAsync(C dto);
+    Task<T> UpdateAsync(Guid id, U dto);
     Task<bool> DeleteAsync(Guid id);
 }
