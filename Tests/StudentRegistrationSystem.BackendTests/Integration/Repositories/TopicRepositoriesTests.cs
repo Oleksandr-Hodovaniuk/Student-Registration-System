@@ -62,7 +62,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenTopicsDoesntExist_ShouldReturnEmpty()
+    public async Task GetAllAsync_WhenTopicsDontExist_ShouldReturnEmpty()
     {
         // Act
         var result = await repository.GetAllAsync();
@@ -72,7 +72,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenIdExists_ShouldDeleteTopicAndReturnTrue()
+    public async Task DeleteAsync_WhenTopicExists_ShouldDeleteTopicAndReturnTrue()
     {
         // Arrange
         var topic = new Topic {Id = Guid.NewGuid(), Name = "C++" };
@@ -90,7 +90,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenIdDoesntExist_ShouldReturnFalse()
+    public async Task DeleteAsync_WhenTopicDoesntExist_ShouldReturnFalse()
     {
         // Arrange
         var topicId = Guid.NewGuid();
