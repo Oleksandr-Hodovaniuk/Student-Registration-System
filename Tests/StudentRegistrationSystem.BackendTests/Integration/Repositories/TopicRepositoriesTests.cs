@@ -43,4 +43,21 @@ public class TopicRepositoriesTests
         result.Should().NotBeNull();
         exists.Should().BeTrue();
     }
+
+    [Test]
+    public async Task GetAllAsync_WhenTopicsExists_ShouldReturnAllTopics()
+    {
+        // Arrange
+        var topic1 = new Topic { Id = Guid.NewGuid(), Name = "C++" };
+        var topic2 = new Topic { Id = Guid.NewGuid(), Name = "HTML" };
+
+        await dbContext.AddRangeAsync(topic1, topic2);
+        await dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await repository.GetAllAsync();
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
 }
