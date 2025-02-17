@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Topic;
+﻿namespace Application.DTOs;
 
 public class TopicDTO
 {
