@@ -168,4 +168,17 @@ public class TopicRepositoriesTests
         // Assert
         result.Should().BeTrue();
     }
+
+    [Test]
+    public async Task ExistsByStringAsync_WhenStringDoesntExist_ShouldReturnFalse()
+    {
+        // Arrange
+        var topicName = "C++";
+
+        // Act
+        var result = await repository.ExistsByStringAsync(topicName);
+
+        // Assert
+        result.Should().BeFalse();
+    }
 }
