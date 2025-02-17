@@ -135,4 +135,17 @@ public class TopicRepositoriesTests
         // Assert
         result.Should().BeTrue();
     }
+
+    [Test]
+    public async Task ExistsByIdAsync_WhenTopicDoesntExist_ShouldReturnFalse()
+    {
+        // Arange
+        var topicId = Guid.NewGuid();
+
+        // Act
+        var result = await repository.ExistsByIdAsync(topicId);
+
+        // Assert
+        result.Should().BeFalse();
+    }
 }
