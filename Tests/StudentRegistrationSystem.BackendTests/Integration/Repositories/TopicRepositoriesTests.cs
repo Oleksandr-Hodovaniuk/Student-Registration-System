@@ -125,7 +125,7 @@ public class TopicRepositoriesTests
     [Test]
     public async Task ExistsByIdAsync_WhenTopicExists_ShouldReturnTrue()
     {
-        // Arange
+        // Arrange
         var topicId = Guid.NewGuid();
         var topic = new Topic { Id = topicId, Name = "C++" };
 
@@ -142,7 +142,7 @@ public class TopicRepositoriesTests
     [Test]
     public async Task ExistsByIdAsync_WhenTopicDoesntExist_ShouldReturnFalse()
     {
-        // Arange
+        // Arrange
         var topicId = Guid.NewGuid();
 
         // Act
@@ -150,5 +150,22 @@ public class TopicRepositoriesTests
 
         // Assert
         result.Should().BeFalse();
+    }
+
+    [Test]
+    public async Task ExistsByStringAsync_WhenStringExists_ShouldReturnTrue()
+    {
+        // Arrange
+        var topicName = "C++";
+        var topic = new Topic { Id = Guid.NewGuid(), Name = topicName };
+
+        await dbContext.AddAsync(topic);
+        await dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await repository.ExistsByStringAsync(topicName);
+
+        // Assert
+        result.Should().BeTrue();
     }
 }
