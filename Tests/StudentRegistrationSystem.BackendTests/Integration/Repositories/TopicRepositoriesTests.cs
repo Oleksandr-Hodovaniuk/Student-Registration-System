@@ -45,7 +45,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenTopicsExists_ShouldReturnAllTopics()
+    public async Task GetAllAsync_WhenTopicsExist_ShouldReturnAllTopics()
     {
         // Arrange
         var topic1 = new Topic { Id = Guid.NewGuid(), Name = "C++" };
@@ -59,5 +59,15 @@ public class TopicRepositoriesTests
 
         // Assert
         result.Should().HaveCount(2);
+    }
+
+    [Test]
+    public async Task GetAllAsync_WhenTopicsDontExists_ShouldReturnEmpty()
+    {
+        // Act
+        var result = await repository.GetAllAsync();
+
+        //Assert
+        result.Should().BeEmpty();
     }
 }
