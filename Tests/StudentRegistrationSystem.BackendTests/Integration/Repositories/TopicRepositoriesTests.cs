@@ -67,7 +67,7 @@ public class TopicRepositoriesTests
         // Act
         var result = await repository.GetAllAsync();
 
-        //Assert
+        // Assert
         result.Should().BeEmpty();
     }
 
@@ -84,7 +84,7 @@ public class TopicRepositoriesTests
         var result = await repository.DeleteAsync(topic.Id);
         var exists = await repository.ExistsByIdAsync(topic.Id);
 
-        //Assert
+        // Assert
         result.Should().BeTrue();
         exists.Should().BeFalse();
     }
@@ -92,10 +92,13 @@ public class TopicRepositoriesTests
     [Test]
     public async Task DeleteAsync_WhenIdDoesntExist_ShouldReturnFalse()
     {
-        // Act
-        var result = await repository.DeleteAsync(Guid.NewGuid());
+        // Arrange
+        var topicId = Guid.NewGuid();
 
-        //Assert
+        // Act
+        var result = await repository.DeleteAsync(topicId);
+
+        // Assert
         result.Should().BeFalse();
     }
 
@@ -114,7 +117,7 @@ public class TopicRepositoriesTests
         var result = await repository.UpdateAsync(topic);
         var updatedTopic = await repository.GetByIdAsync(topic.Id);
             
-        //Assert
+        // Assert
         updatedTopic.Should().NotBeNull();
         updatedTopic.Name.Should().Be(topic.Name);
     }
