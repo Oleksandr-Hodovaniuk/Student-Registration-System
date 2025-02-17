@@ -118,4 +118,21 @@ public class TopicRepositoriesTests
         updatedTopic.Should().NotBeNull();
         updatedTopic.Name.Should().Be(topic.Name);
     }
+
+    [Test]
+    public async Task ExistsByIdAsync_WhenTopicExists_ShouldReturnTrue()
+    {
+        // Arange
+        var topicId = Guid.NewGuid();
+        var topic = new Topic { Id = topicId, Name = "C++" };
+
+        await dbContext.AddAsync(topic);
+        await dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await repository.ExistsByIdAsync(topicId);
+
+        // Assert
+        result.Should().BeTrue();
+    }
 }
