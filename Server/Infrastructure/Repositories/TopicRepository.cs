@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-internal class TopicRepository(StudentRegistrationSystemDbContext dbContext) : ITopicRepository
+public class TopicRepository(StudentRegistrationSystemDbContext dbContext) : ITopicRepository
 {
     public async Task<Topic> CreateAsync(Topic entity)
     {
