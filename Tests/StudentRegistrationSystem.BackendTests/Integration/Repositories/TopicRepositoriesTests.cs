@@ -70,4 +70,22 @@ public class TopicRepositoriesTests
         //Assert
         result.Should().BeEmpty();
     }
+
+    [Test]
+    public async Task DeleteAsync_WhenIdExists_ShouldDeleteTopic()
+    {
+        // Arrange
+        var topic = new Topic {Id = Guid.NewGuid(), Name = "C++" };
+        
+        await dbContext.AddAsync(topic);
+        await dbContext.SaveChangesAsync();
+
+        // Act
+        var result = await repository.DeleteAsync(topic.Id);
+        var exists = await repository.ExistsByIdAsync(topic.Id);
+
+        //Assert
+        result.Should().BeTrue();
+        exists.Should().BeFalse();
+    }
 }
