@@ -72,7 +72,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenIdExists_ShouldDeleteTopic()
+    public async Task DeleteAsync_WhenIdExists_ShouldDeleteTopicAndReturnTrue()
     {
         // Arrange
         var topic = new Topic {Id = Guid.NewGuid(), Name = "C++" };
@@ -87,5 +87,15 @@ public class TopicRepositoriesTests
         //Assert
         result.Should().BeTrue();
         exists.Should().BeFalse();
+    }
+
+    [Test]
+    public async Task DeleteAsync_WhenIdDontExists_ShouldReturnFalse()
+    {
+        // Act
+        var result = await repository.DeleteAsync(Guid.NewGuid());
+
+        //Assert
+        result.Should().BeFalse();
     }
 }
