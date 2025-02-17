@@ -62,7 +62,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenTopicsDontExists_ShouldReturnEmpty()
+    public async Task GetAllAsync_WhenTopicsDoesntExist_ShouldReturnEmpty()
     {
         // Act
         var result = await repository.GetAllAsync();
@@ -90,7 +90,7 @@ public class TopicRepositoriesTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenIdDontExists_ShouldReturnFalse()
+    public async Task DeleteAsync_WhenIdDoesntExist_ShouldReturnFalse()
     {
         // Act
         var result = await repository.DeleteAsync(Guid.NewGuid());
