@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces.Repositories;
 using Application.Services;
 using AutoMapper;
@@ -24,7 +25,7 @@ public class TopicServiceTests
     }
 
     [Test]
-    public async Task CreateAsync_TopicCreateDTOValid_ShouldReturnTopicDTO()
+    public async Task CreateAsync_TopicDoesntExist_ShouldReturnTopicDTO()
     {
         // Arrange
         var createDto = new TopicCreateDTO { Name = "C++" };
@@ -36,10 +37,26 @@ public class TopicServiceTests
 
         // Act
         var result = await topicService.CreateAsync(createDto);
-
+        
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be(mockTopic.Id);
         result.Name.Should().Be(createDto.Name);
+    }
+
+    [Test]
+    public async Task CreateAsync_TopicExists_ShouldThrowBusinessException()
+    {
+        // Arrange
+        var dto = new TopicCreateDTO { Name = "C++" };
+
+        mockRepository.Setup(r => r.ExistsByNameAsync(dto.Name)).ReturnsAsync(true);
+
+        // Act
+        var action = async () => await topicService.CreateAsync(dto);
+
+        // Assert
+        await action.Should().ThrowAsync<BusinessException>()
+            .WithMessage($"Topic with name: {dto.Name} already exists.");
     }
 }
