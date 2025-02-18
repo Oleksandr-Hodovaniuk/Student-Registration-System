@@ -59,4 +59,34 @@ public class TopicServiceTests
         await action.Should().ThrowAsync<BusinessException>()
             .WithMessage($"Topic with name: {dto.Name} already exists.");
     }
+
+    [Test]
+    public async Task DeleteAsync_TopicExists_ShouldReturnTrue()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        mockRepository.Setup(r => r.ExistsByIdAsync(id)).ReturnsAsync(true);
+        mockRepository.Setup(r => r.DeleteAsync(id)).ReturnsAsync(true);
+
+        // Act
+        var result = await topicService.DeleteAsync(id);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task DeleteAsync_TopicDoesntExist_ShouldThrowNotFoundException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        mockRepository.Setup(r => r.ExistsByIdAsync(id)).ReturnsAsync(false);
+
+        // Act
+        var result = async () => await topicService.DeleteAsync(id);
+
+        // Assert
+        await result.Should().ThrowAsync<NotFoundException>()
+            .WithMessage($"Topic with id: {id} doesn't exist.");
+    }
 }

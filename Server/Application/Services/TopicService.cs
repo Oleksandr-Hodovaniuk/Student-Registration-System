@@ -22,10 +22,15 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
         return mapper.Map<TopicDTO>(topic);
     }
 
-    public Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
-    }
+        if (!await repository.ExistsByIdAsync(id))
+        {
+            throw new NotFoundException($"Topic with id: {id} doesn't exist.");
+        }
+
+        return await repository.DeleteAsync(id);
+    } 
 
     public Task<IEnumerable<TopicDTO>> GetAllAsync()
     {
