@@ -9,6 +9,6 @@ public class TopicProfile : Profile
 	public TopicProfile()
 	{
 		CreateMap<Topic, TopicDTO>().ReverseMap();
-		CreateMap<Topic, TopicCreateDTO>().ReverseMap();
+		CreateMap<TopicCreateDTO, Topic>();
 	}
 }

@@ -7,6 +7,7 @@ using Moq;
 
 namespace StudentRegistrationSystem.BackendTests.Unit.Services;
 
+[TestFixture]
 public class TopicServiceTests
 {
     private Mock<ITopicRepository> mockRepository;
