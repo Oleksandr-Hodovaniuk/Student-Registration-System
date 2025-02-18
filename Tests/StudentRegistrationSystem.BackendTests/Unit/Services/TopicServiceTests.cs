@@ -89,4 +89,51 @@ public class TopicServiceTests
         await result.Should().ThrowAsync<NotFoundException>()
             .WithMessage($"Topic with id: {id} doesn't exist.");
     }
+
+    [Test]
+    public async Task GetAllAsync_TopicsExist_ShouldReturnTopics()
+    {
+        // Arrange
+        var mockTopics = new List<Topic>
+        {
+            new Topic { Id = Guid.NewGuid(), Name = "C++"},
+            new Topic { Id = Guid.NewGuid(), Name = "HTML"}
+        };
+
+        var mockTopicDTOs = new List<TopicDTO>
+        {
+            new TopicDTO { Id = mockTopics[0].Id, Name = mockTopics[0].Name},
+            new TopicDTO { Id = mockTopics[1].Id, Name = mockTopics[1].Name}
+        };
+
+        mockRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(mockTopics);
+        mockMapper.Setup(m => m.Map<IEnumerable<TopicDTO>>(It.IsAny<IEnumerable<Topic>>())).Returns(mockTopicDTOs);
+
+        // Act
+        var result = await topicService.GetAllAsync();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(2);
+        result.Should().Equal(mockTopicDTOs);
+    }
+
+    [Test]
+    public async Task GetAllAsync_TopicsDontExist_ShouldReturnEmpty()
+    {
+        // Arrange
+        var mockTopics = new List<Topic>();
+
+        var mockTopicDTOs = new List<TopicDTO>();
+
+        mockRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(mockTopics);
+        mockMapper.Setup(m => m.Map<IEnumerable<TopicDTO>>(It.IsAny<IEnumerable<Topic>>())).Returns(mockTopicDTOs);
+
+        // Act
+        var result = await topicService.GetAllAsync();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
 }

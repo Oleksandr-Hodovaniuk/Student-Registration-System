@@ -32,9 +32,11 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
         return await repository.DeleteAsync(id);
     } 
 
-    public Task<IEnumerable<TopicDTO>> GetAllAsync()
+    public async Task<IEnumerable<TopicDTO>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var topics =  await repository.GetAllAsync();
+
+        return mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
 
     public Task<TopicDTO> GetByIdAsync(Guid id)
