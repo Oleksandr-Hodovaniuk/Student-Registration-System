@@ -39,9 +39,16 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
         return mapper.Map<IEnumerable<TopicDTO>>(topics);
     }
 
-    public Task<TopicDTO> GetByIdAsync(Guid id)
+    public async Task<TopicDTO> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        if (!await repository.ExistsByIdAsync(id))
+        {
+            throw new NotFoundException($"Topic with id: {id} doesn't exist.");
+        }
+
+        var topic = await repository.GetByIdAsync(id);
+
+        return mapper.Map<TopicDTO>(topic);
     }
 
     public Task<TopicDTO> UpdateAsync(Guid id, TopicCreateDTO entity)

@@ -123,7 +123,6 @@ public class TopicServiceTests
     {
         // Arrange
         var mockTopics = new List<Topic>();
-
         var mockTopicDTOs = new List<TopicDTO>();
 
         mockRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(mockTopics);
@@ -135,5 +134,40 @@ public class TopicServiceTests
         // Assert
         result.Should().NotBeNull();
         result.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task GetByIdAsync_TopicExists_ShouldReturnTopicDTO()
+    { 
+        // Arrange
+        var mockTopic = new Topic() { Id = Guid.NewGuid(), Name = "C++"};
+        var mockTopicDTO = new TopicDTO() { Id = mockTopic.Id, Name = mockTopic.Name };
+
+        mockRepository.Setup(r => r.ExistsByIdAsync(mockTopicDTO.Id)).ReturnsAsync(true);
+        mockRepository.Setup(r => r.GetByIdAsync(mockTopicDTO.Id)).ReturnsAsync(mockTopic);
+        mockMapper.Setup(m => m.Map<TopicDTO>(mockTopic)).Returns(mockTopicDTO);
+
+        // Act
+        var result = await topicService.GetByIdAsync(mockTopic.Id);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Id.Should().Be(mockTopic.Id);
+        result.Name.Should().Be(mockTopic.Name);
+    }
+
+    [Test]
+    public async Task GetByIdAsync_TopicDoesntExist_ShouldThrowNotFoundException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        mockRepository.Setup(r => r.ExistsByIdAsync(id)).ReturnsAsync(false);
+
+        // Act
+        var result = async () => await topicService.GetByIdAsync(id);
+
+        // Assert
+        await result.Should().ThrowAsync<NotFoundException>()
+            .WithMessage($"Topic with id: {id} doesn't exist.");   
     }
 }
