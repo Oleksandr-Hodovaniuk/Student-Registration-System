@@ -11,7 +11,7 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
 {
     public async Task<TopicDTO> CreateAsync(TopicCreateDTO dto)
     {
-        if (await repository.ExistsByNameAsync(dto.Name))
+        if(await repository.ExistsByNameAsync(dto.Name))
         {
             throw new BusinessException($"Topic with name: {dto.Name} already exists.");
         }
@@ -24,7 +24,7 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        if (!await repository.ExistsByIdAsync(id))
+        if(!await repository.ExistsByIdAsync(id))
         {
             throw new NotFoundException($"Topic with id: {id} doesn't exist.");
         }
@@ -41,7 +41,7 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
 
     public async Task<TopicDTO> GetByIdAsync(Guid id)
     {
-        if (!await repository.ExistsByIdAsync(id))
+        if(!await repository.ExistsByIdAsync(id))
         {
             throw new NotFoundException($"Topic with id: {id} doesn't exist.");
         }
@@ -51,8 +51,22 @@ public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicS
         return mapper.Map<TopicDTO>(topic);
     }
 
-    public Task<TopicDTO> UpdateAsync(Guid id, TopicCreateDTO entity)
+    public async Task<TopicDTO> UpdateAsync(Guid id, TopicCreateDTO dto)
     {
-        throw new NotImplementedException();
+        if (!await repository.ExistsByIdAsync(id))
+        {
+            throw new NotFoundException($"Topic with id: {id} doesn't exist.");
+        }
+        else if (await repository.ExistsByNameAsync(dto.Name))
+        {
+            throw new BusinessException($"Topic with name: {dto.Name} already exists.");
+        }
+
+        var topic = await repository.GetByIdAsync(id);
+        topic!.Name = dto.Name;
+
+        await repository.UpdateAsync(topic);
+
+        return mapper.Map<TopicDTO>(topic);
     }
 }
