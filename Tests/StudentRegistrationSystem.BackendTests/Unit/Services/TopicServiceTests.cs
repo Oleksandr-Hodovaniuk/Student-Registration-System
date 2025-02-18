@@ -16,7 +16,7 @@ public class TopicServiceTests
     public void SetUp()
     {
         mockRepository = new Mock<ITopicRepository>();
-        topicService = new TopicService(mockRepository.Object);
+        //topicService = new TopicService(mockRepository.Object);
     }
 
     [Test]

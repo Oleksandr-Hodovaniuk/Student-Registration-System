@@ -1,4 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using Application.Mappers;
+using Application.Services;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Seeders;
 using Infrastructure.Repositories;
@@ -21,5 +24,11 @@ public static class ServiceCollectionExtensions
 
         // Registration of repositories.
         services.AddScoped<ITopicRepository, TopicRepository>();
+
+        // Registration of mappers.
+        services.AddAutoMapper(typeof(TopicProfile).Assembly);
+
+        // Registration of services.
+        services.AddScoped<ITopicService, TopicService>();
     }
 }

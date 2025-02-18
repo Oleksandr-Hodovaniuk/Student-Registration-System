@@ -1,21 +1,19 @@
 ﻿using Application.DTOs;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using AutoMapper;
 using Core.Entities;
 
 namespace Application.Services;
 
-public class TopicService(ITopicRepository repository) : ITopicService
+public class TopicService(ITopicRepository repository, IMapper mapper) : ITopicService
 {
     public async Task<TopicDTO> CreateAsync(TopicCreateDTO dto)
     {
-        var topic = new Topic { Name = dto.Name };
-
+        var topic = mapper.Map<Topic>(dto);
         topic = await repository.CreateAsync(topic);
 
-        var newDto = new TopicDTO { Id = topic.Id, Name = topic.Name };
-
-        return newDto;
+        return mapper.Map<TopicDTO>(topic);
     }
 
     public Task<bool> DeleteAsync(Guid id)
