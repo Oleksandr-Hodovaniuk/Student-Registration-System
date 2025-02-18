@@ -52,7 +52,7 @@ public class TopicRepository(StudentRegistrationSystemDbContext dbContext) : ITo
         return await dbContext.Topcis.AnyAsync(x => x.Id == id);
     }
 
-    public async Task<bool> ExistsByStringAsync(string str)
+    public async Task<bool> ExistsByNameAsync(string str)
     {
         return await dbContext.Topcis.AnyAsync(x => x.Name == str);
     }

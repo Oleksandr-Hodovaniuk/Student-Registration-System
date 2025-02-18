@@ -21,7 +21,7 @@ public class TopicServiceTests
     }
 
     [Test]
-    public async Task CreateAsync_WhenTopicCreateDTOValid_ShouldReturnTopicDTO()
+    public async Task CreateAsync_TopicCreateDTOValid_ShouldReturnTopicDTO()
     {
         // Arrange
         var createDto = new TopicCreateDTO { Name = "C++" };
