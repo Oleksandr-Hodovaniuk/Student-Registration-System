@@ -8,5 +8,5 @@ public interface IGenericRepository<T> where T : class
     Task<T> UpdateAsync(T entity);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> ExistsByIdAsync(Guid id);
-    Task<bool> ExistsByStringAsync(string str);
+    Task<bool> ExistsByNameAsync(string str);
 }

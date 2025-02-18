@@ -30,7 +30,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task CreateAsync_WhenValidTopic_ShouldCreateAndReturnTopic()
+    public async Task CreateAsync_ValidTopic_ShouldCreateAndReturnTopic()
     {
         // Arrange
         var topic = new Topic { Id = Guid.NewGuid(), Name = "C++" };
@@ -45,7 +45,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenTopicsExist_ShouldReturnAllTopics()
+    public async Task GetAllAsync_TopicsExist_ShouldReturnAllTopics()
     {
         // Arrange
         var topic1 = new Topic { Id = Guid.NewGuid(), Name = "C++" };
@@ -62,7 +62,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task GetAllAsync_WhenTopicsDontExist_ShouldReturnEmpty()
+    public async Task GetAllAsync_TopicsDontExist_ShouldReturnEmpty()
     {
         // Act
         var result = await repository.GetAllAsync();
@@ -72,7 +72,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenTopicExists_ShouldDeleteTopicAndReturnTrue()
+    public async Task DeleteAsync_TopicExists_ShouldDeleteTopicAndReturnTrue()
     {
         // Arrange
         var topic = new Topic {Id = Guid.NewGuid(), Name = "C++" };
@@ -90,7 +90,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenTopicDoesntExist_ShouldReturnFalse()
+    public async Task DeleteAsync_TopicDoesntExist_ShouldReturnFalse()
     {
         // Arrange
         var topicId = Guid.NewGuid();
@@ -103,7 +103,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task UpdateAsync_WhenValidTopic_ShouldUpdateAndReturnTopic()
+    public async Task UpdateAsync_ValidTopic_ShouldUpdateAndReturnTopic()
     {
         // Arrange
         var topic = new Topic { Id = Guid.NewGuid(), Name = "C++" };
@@ -123,7 +123,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task ExistsByIdAsync_WhenTopicExists_ShouldReturnTrue()
+    public async Task ExistsByIdAsync_TopicExists_ShouldReturnTrue()
     {
         // Arrange
         var topicId = Guid.NewGuid();
@@ -140,7 +140,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task ExistsByIdAsync_WhenTopicDoesntExist_ShouldReturnFalse()
+    public async Task ExistsByIdAsync_TopicDoesntExist_ShouldReturnFalse()
     {
         // Arrange
         var topicId = Guid.NewGuid();
@@ -153,7 +153,7 @@ public class TopicRepositoryTests
     }
 
     [Test]
-    public async Task ExistsByStringAsync_WhenStringExists_ShouldReturnTrue()
+    public async Task ExistsByNameAsync_StringExists_ShouldReturnTrue()
     {
         // Arrange
         var topicName = "C++";
@@ -163,20 +163,20 @@ public class TopicRepositoryTests
         await dbContext.SaveChangesAsync();
 
         // Act
-        var result = await repository.ExistsByStringAsync(topicName);
+        var result = await repository.ExistsByNameAsync(topicName);
 
         // Assert
         result.Should().BeTrue();
     }
 
     [Test]
-    public async Task ExistsByStringAsync_WhenStringDoesntExist_ShouldReturnFalse()
+    public async Task ExistsByNameAsync_StringDoesntExist_ShouldReturnFalse()
     {
         // Arrange
         var topicName = "C++";
 
         // Act
-        var result = await repository.ExistsByStringAsync(topicName);
+        var result = await repository.ExistsByNameAsync(topicName);
 
         // Assert
         result.Should().BeFalse();
